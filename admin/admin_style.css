@@ -1,0 +1,435 @@
+/* admin/admin_style.css */
+
+/* --- Héritage des variables de ../public/style.css --- */
+/* Assurez-vous que les variables (:root) sont bien définies dans le fichier public/style.css */
+
+.loading-message {
+    display: none; /* Caché par défaut */
+    text-align: center;
+    padding: 2rem;
+    background-color: rgba(var(--surface, 30 30 46), 0.8);
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    border: 1px dashed var(--border-color, #333);
+}
+.loading-message i {
+    font-size: 2rem;
+    color: var(--primary, #64ffda);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+
+body.admin-body { /* Optionnel: classe spécifique pour le body admin */
+    /* Peut-être un fond légèrement différent ? */
+    /* background: linear-gradient(180deg, #333 0%, #1a1a1a 100%); */
+}
+
+.admin-container {
+    max-width: 1400px; /* Conteneur plus large pour l'admin */
+}
+
+/* --- Header --- */
+.admin-header {
+    /* Styles spécifiques si besoin */
+}
+
+.admin-nav .admin-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent; /* Pour la cohérence */
+}
+
+.admin-nav .back-button {
+    background-color: var(--surface, #1e1e1e);
+    color: var(--text-secondary, #b3b3b3);
+    border-color: var(--border-color, #333);
+}
+.admin-nav .back-button:hover {
+    background-color: var(--background, #121212);
+    color: var(--text-primary, #e0e0e0);
+    border-color: var(--text-secondary, #b3b3b3);
+    transform: translateY(-1px);
+}
+
+.admin-nav .logout-button {
+    background-color: rgba(255, 64, 129, 0.1); /* Fond basé sur --accent */
+    color: var(--accent, #ff4081);
+    border-color: rgba(255, 64, 129, 0.5);
+}
+.admin-nav .logout-button:hover {
+    background-color: var(--accent, #ff4081);
+    color: var(--background, #121212);
+    border-color: var(--accent, #ff4081);
+     box-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+    transform: translateY(-1px);
+}
+
+
+/* --- Sections --- */
+.admin-section {
+    background-color: var(--surface, #1e1e1e);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #333);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border-color, #333);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary, #e0e0e0);
+    font-family: var(--font-body); /* Utilise la police body */
+}
+
+.admin-button.add-button {
+    background-color: var(--primary, #64ffda);
+    color: var(--background, #121212);
+    padding: 0.5rem 0.8rem;
+    border-radius: 50px; /* Bouton rond */
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.admin-button.add-button:hover {
+    opacity: 0.85;
+    transform: scale(1.05);
+     box-shadow: 0 4px 10px rgba(100, 255, 218, 0.3);
+}
+.admin-button.add-button i {
+    font-size: 1em; /* Taille icône relative au texte */
+}
+
+
+/* --- Tables --- */
+.table-container {
+    overflow-x: auto; /* Permet le scroll horizontal sur petit écran */
+    -webkit-overflow-scrolling: touch; /* Scroll fluide sur iOS */
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse; /* Fusionne les bordures */
+    font-size: 0.9rem;
+}
+
+.admin-table thead {
+    background-color: rgba(255, 255, 255, 0.05); /* Fond légèrement différent */
+}
+
+.admin-table th,
+.admin-table td {
+    text-align: left;
+    padding: 0.9rem 1rem; /* Padding généreux */
+    border-bottom: 1px solid var(--border-color, #333);
+    vertical-align: middle; /* Alignement vertical */
+}
+
+.admin-table th {
+    font-weight: 700;
+    color: var(--text-secondary, #b3b3b3);
+    text-transform: uppercase; /* Titres en majuscules */
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+}
+
+.admin-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.08); /* Effet de survol subtil */
+}
+
+.admin-table td {
+    color: var(--text-primary, #e0e0e0);
+}
+.admin-table td:last-child {
+     text-align: right; /* Actions alignées à droite */
+     white-space: nowrap; /* Empêche les icônes de passer à la ligne */
+}
+
+/* Colonne Actions */
+.admin-table td.actions {
+    display: flex;
+    justify-content: flex-end; /* Alignement à droite avec flex */
+    gap: 0.8rem; /* Espace entre icônes */
+}
+
+.action-icon {
+    color: var(--text-secondary, #b3b3b3);
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.15s ease;
+    display: inline-block; /* Pour appliquer transform */
+}
+
+.action-icon.edit-icon:hover {
+    color: var(--primary, #64ffda);
+    transform: scale(1.15);
+}
+
+.action-icon.delete-icon:hover {
+    color: var(--accent, #ff4081);
+    transform: scale(1.15) rotate(5deg); /* Légère rotation pour danger */
+}
+
+/* --- Responsive spécifique Admin --- */
+@media (max-width: 640px) {
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start; /* Aligne à gauche sur mobile */
+    }
+    .admin-nav {
+        margin-top: 1rem;
+        width: 100%;
+        flex-direction: row; /* Garde en ligne sur mobile */
+        justify-content: space-between; /* Espace les boutons */
+    }
+     .admin-nav .admin-button {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+     .admin-nav .back-button i, .admin-nav .logout-button i {
+        margin-right: 0.3rem;
+     }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .admin-button.add-button {
+        align-self: flex-end; /* Place le bouton + à droite */
+    }
+    .admin-table th,
+    .admin-table td {
+        padding: 0.7rem 0.8rem;
+    }
+    .admin-table th {
+        font-size: 0.7rem;
+    }
+     .admin-table td {
+        font-size: 0.85rem;
+    }
+     .admin-table td.actions {
+        gap: 0.6rem;
+    }
+     .action-icon {
+        font-size: 1rem;
+    }
+}
+
+/* admin/admin_style.css */
+
+/* --- Styles pour les formulaires d'administration --- */
+
+.admin-form-container {
+    background-color: var(--surface, #1e1e1e);
+    border-radius: 8px;
+    padding: 2rem; /* Plus de padding */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #333);
+    max-width: 800px; /* Limite la largeur du formulaire */
+    margin: 2rem auto; /* Centre le formulaire */
+}
+
+.form-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary, #e0e0e0);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color, #333);
+    font-family: var(--font-body);
+}
+
+/* Style pour les messages d'erreur */
+.form-errors {
+    background-color: rgba(255, 64, 129, 0.1); /* Fond basé sur --accent */
+    border: 1px solid rgba(255, 64, 129, 0.5);
+    color: var(--accent, #ff4081);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}
+.form-errors ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.form-errors li {
+    margin-bottom: 0.5rem;
+}
+.form-errors li:last-child {
+    margin-bottom: 0;
+}
+
+/* Style pour chaque groupe de champ */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-secondary, #b3b3b3);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color, #333);
+    border-radius: 6px;
+    background-color: var(--background, #121212); /* Fond plus sombre */
+    color: var(--text-primary, #e0e0e0);
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none; /* Supprime l'outline par défaut */
+}
+/* Style spécifique pour les inputs file */
+.form-group input[type="file"] {
+    padding: 0.6rem 1rem; /* Ajustement padding */
+     background-color: var(--surface, #1e1e1e); /* Correspondance avec les autres inputs */
+     cursor: pointer;
+}
+.form-group input[type="file"]::file-selector-button {
+    /* Style le bouton interne (navigateurs modernes) */
+    padding: 0.5rem 0.8rem;
+    border: none;
+    background-color: var(--primary, #64ffda);
+    color: var(--background, #121212);
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 1rem;
+     font-weight: 600;
+     transition: background-color 0.2s ease;
+}
+.form-group input[type="file"]::file-selector-button:hover {
+    opacity: 0.85;
+}
+
+
+.form-group textarea {
+    min-height: 120px; /* Hauteur minimale pour textarea */
+    resize: vertical; /* Permet redimensionnement vertical */
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary, #64ffda);
+    box-shadow: 0 0 0 3px var(--glow-color-primary, rgba(100, 255, 218, 0.3)); /* Halo au focus */
+}
+
+/* Style pour la zone de prévisualisation */
+.file-preview {
+    margin-top: 1rem;
+    border: 1px dashed var(--border-color, #333);
+    padding: 1rem;
+    border-radius: 6px;
+    background-color: var(--background, #121212);
+    text-align: center; /* Centre les éléments */
+}
+.file-preview img,
+.file-preview video {
+    max-width: 100%; /* Limite la largeur max */
+    max-height: 250px; /* Limite la hauteur max */
+    display: inline-block; /* Pour centrage */
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.file-preview video {
+    background-color: #000; /* Fond noir pour la vidéo */
+}
+
+/* Boutons du formulaire */
+.form-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem; /* Espace entre boutons */
+    justify-content: flex-end; /* Aligne les boutons à droite */
+}
+
+.form-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.7rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.form-button.submit-button {
+    background-color: var(--primary, #64ffda);
+    color: var(--background, #121212);
+    border-color: var(--primary, #64ffda);
+}
+.form-button.submit-button:hover {
+     opacity: 0.85;
+     box-shadow: 0 4px 10px var(--glow-color-primary, rgba(100, 255, 218, 0.3));
+     transform: translateY(-1px);
+}
+
+.form-button.cancel-button {
+    background-color: transparent;
+    color: var(--text-secondary, #b3b3b3);
+    border-color: var(--border-color, #333);
+}
+.form-button.cancel-button:hover {
+    background-color: var(--surface, #1e1e1e);
+    color: var(--text-primary, #e0e0e0);
+    border-color: var(--text-secondary, #b3b3b3);
+}
+
+/* Ajouter à admin/admin_style.css */
+
+.current-file-info {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #b3b3b3);
+    background-color: rgba(255, 255, 255, 0.04); /* Fond très léger */
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    display: inline-block; /* Pour s'adapter au contenu */
+    border: 1px solid var(--border-color, #333);
+}
+.current-file-info i {
+    margin-right: 0.4rem;
+    color: var(--primary, #64ffda); /* Icône colorée */
+}
+
+.current-preview-image {
+    display: block; /* Ou inline-block si préféré */
+    max-width: 150px; /* Prévisu plus petite */
+    max-height: 150px;
+    margin-top: 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color, #333);
+}

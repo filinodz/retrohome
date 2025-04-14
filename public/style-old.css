@@ -1,0 +1,1114 @@
+/* public/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Press+Start+2P&family=Inter:wght@400;500;700&display=swap');
+
+/* Variables et thème moderne sombre avec accentuation */
+:root {
+    --primary: #64ffda;          /* Cyan accentué */
+    --secondary: #f4ff81;        /* Jaune doux secondaire */
+    --accent: #ff4081;           /* Rose accentué pour actions */
+    --background: #121212;       /* Fond sombre profond */
+    --surface: #1e1e1e;          /* Surface légèrement plus claire */
+    --text-primary: #ffffff;      /* Texte principal blanc */
+    --text-secondary: #b3b3b3;   /* Texte secondaire gris clair */
+    --border-color: #333333;     /* Bordures discrètes */
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Ombre portée subtile */
+    --transition-duration: 0.3s;
+    --font-pixel: 'Press Start 2P', cursive;
+    --font-header: 'Roboto Condensed', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth; /* Pour des transitions de scroll fluides */
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden; /* Empêche le scroll horizontal */
+}
+
+/* Typographie globale */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-header);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+}
+
+p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color var(--transition-duration) ease-in-out;
+}
+
+a:hover {
+    color: var(--secondary);
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Header et Navigation */
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+header h1.pixel-font {
+    font-family: var(--font-pixel);
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+/* Bouton Profil dans le header */
+header .absolute.top-0.right-0 {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+header button#menu-button {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: var(--box-shadow);
+}
+
+header button#menu-button:hover, header button#menu-button:focus {
+    background-color: var(--primary);
+    color: var(--background);
+    transform: scale(1.05);
+}
+
+#profile-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: var(--surface);
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    z-index: 10;
+}
+
+#profile-menu a {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-primary);
+    transition: background-color var(--transition-duration) ease-in-out;
+}
+
+#profile-menu a:hover {
+    background-color: var(--background);
+}
+
+/* Console Selector */
+.console-selector {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* Permet aux boutons de passer à la ligne sur les petits écrans */
+}
+
+.console-button {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: var(--box-shadow);
+    display: flex; /* Pour aligner logo et texte */
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.console-button:hover, .console-button.active {
+    background-color: var(--primary);
+    color: var(--background);
+    transform: scale(1.05);
+}
+
+.console-button img.console-logo-button {
+    height: 24px; /* Ajustez la taille du logo ici */
+    width: auto;
+}
+
+/* Games Slider */
+.games-slider {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.slider-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--text-primary);
+    border: none;
+    padding: 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity var(--transition-duration) ease-in-out;
+    z-index: 2; /* Assure que les boutons sont au-dessus du slider */
+}
+
+.slider-button:hover {
+    opacity: 1;
+}
+
+.slider-button.prev {
+    left: 0.5rem;
+}
+
+.slider-button.next {
+    right: 0.5rem;
+}
+
+.games-list {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto; /* Permet le scroll horizontal */
+    padding-bottom: 1rem; /* Pour éviter de couper les ombres */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.games-list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.game-card {
+    background-color: var(--surface);
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    min-width: 250px; /* Largeur minimale des cartes de jeu */
+    max-width: 250px; /* Largeur maximale pour une taille fixe dans le slider */
+    transition: transform 0.2s ease-in-out;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+}
+
+.game-card .console-header {
+    background-color: rgba(0, 0, 0, 0.3); /* En-tête légèrement transparent */
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.game-card .console-header img.console-logo {
+    height: 20px; /* Taille du logo dans l'en-tête */
+    width: auto;
+}
+
+.game-card .console-header h4 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.game-card img.game-cover {
+    width: 100%;
+    height: 150px; /* Hauteur fixe des couvertures de jeu dans le slider */
+    object-fit: cover;
+    display: block; /* Empêche l'espace supplémentaire sous l'image */
+}
+
+.game-card .game-details {
+    padding: 1rem;
+}
+
+.game-card .game-details h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.game-card .game-details p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Nombre de lignes à afficher */
+    -webkit-box-orient: vertical;
+}
+
+.game-card .game-details .game-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-card .game-details .game-actions .year {
+    font-size: 0.9rem;
+    color: var(--primary);
+}
+
+.game-card .game-details .game-actions .play-button {
+    background-color: var(--accent);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.game-card .game-details .game-actions .play-button:hover,
+.game-card .game-details .game-actions .play-button:focus {
+    background-color: #e03070; /* Légèrement plus foncé au hover */
+    transform: scale(1.03);
+}
+
+/* Rating stars styles */
+.rating {
+    display: flex;
+    flex-direction: row-reverse; /* Important pour l'ordre des étoiles */
+    margin-top: 0.5rem;
+    justify-content: flex-start; /* Alignement à gauche */
+}
+
+.rating input {
+    display: none; /* Cache les inputs radio */
+}
+
+.rating label {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23b3b3b3" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>'); /* Étoile non remplie */
+    background-size: contain;
+    display: block;
+}
+
+.rating label:hover,
+.rating label:hover ~ label,
+.rating input:checked ~ label {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23f4ff81" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>'); /* Étoile remplie en jaune secondaire */
+}
+.average-rating {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-left: 0.5rem;
+}
+.average-rating-stars {
+    display: flex; /* Pour aligner les étoiles moyennes */
+    margin-top: 0.3rem;
+}
+
+.average-rating-stars .average-rating-star {
+    width: 14px;
+    height: 14px;
+    margin-right: 2px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23f4ff81" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>'); /* Étoile moyenne remplie en jaune secondaire */
+    background-size: contain;
+    display: inline-block;
+}
+
+
+/* Favorite Button */
+.favorite-button, .favorited-button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    position: absolute; /* Positionné absolument par rapport à .console-header */
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 50%; /* Pour un bouton rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.favorite-button:hover, .favorited-button:hover {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+.favorited-button {
+    color: var(--accent); /* Couleur pour l'état favori */
+}
+
+
+/* Game Container Modal */
+#game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Fond semi-transparent noir */
+    display: none; /* Caché par défaut */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Pour être au-dessus de tout */
+}
+
+/* Style pour le bouton "Retour" dans le Game Container */
+#game-container button.fixed.top-4.left-4 {
+    background-color: var(--accent);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: var(--box-shadow);
+    z-index: 1001; /* Pour être au-dessus du contenu du modal */
+}
+
+#game-container button.fixed.top-4.left-4:hover,
+#game-container button.fixed.top-4.left-4:focus {
+    background-color: #e03070; /* Légèrement plus foncé au hover */
+    transform: scale(1.05);
+}
+
+
+/* Auth Container (login/register) */
+.auth-container {
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: var(--box-shadow);
+    max-width: 400px;
+    width: 95%;
+    text-align: center;
+}
+
+.auth-container h2#auth-title {
+    font-family: var(--font-pixel);
+    font-size: 1.8rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"],
+.auth-form input[type="email"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.auth-form button[type="submit"]#auth-submit {
+    background-color: var(--primary);
+    color: var(--background);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+    width: 100%;
+}
+
+.auth-form button[type="submit"]#auth-submit:hover,
+.auth-form button[type="submit"]#auth-submit:focus {
+    background-color: var(--secondary);
+    color: var(--background);
+    transform: scale(1.03);
+}
+
+.auth-container p#auth-toggle {
+    margin-top: 1rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-duration) ease-in-out;
+}
+
+.auth-container p#auth-toggle:hover {
+    color: var(--text-primary);
+}
+
+.auth-container div#auth-message {
+    margin-top: 1rem;
+    color: var(--accent); /* Couleur pour les messages d'erreur ou de succès */
+}
+.auth-container div#auth-message.text-red-500 {
+    color: #f44336; /* Rouge pour les erreurs, si vous utilisez Tailwind */
+}
+
+/* Profile Page Styles */
+.profile-section {
+    background-color: var(--surface);
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.profile-section h3.pixel-font {
+    font-family: var(--font-pixel);
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.profile-section p {
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.profile-section p strong {
+    color: var(--text-primary);
+    font-weight: 500;
+    margin-right: 0.3rem;
+}
+
+/* Favorite Games List in Profile */
+#profile-favorites {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.favorite-game-card {
+    background-color: var(--background);
+    border-radius: 0.3rem;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+}
+
+.favorite-game-card .flex.items-center {
+    display: flex;
+    align-items: center;
+}
+
+.favorite-game-card img.w-16.h-16.object-cover.mr-4 {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 1rem;
+    border-radius: 0.2rem;
+}
+
+.favorite-game-card div h4.text-lg.font-bold {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+}
+
+.favorite-game-card div p.text-sm.text-gray-400 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.profile-section p.no-favorite-message {
+    font-style: italic;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 1rem;
+}
+
+
+/* Collections Grid on Profile */
+#collections-container.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.collection-card {
+    background-color: var(--surface);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid var(--border-color);
+    cursor: pointer; /* Indique que la carte est cliquable */
+}
+
+.collection-card:hover {
+    transform: translateY(-5px);
+    background-color: #282828; /* Légèrement plus clair au hover */
+}
+
+.collection-card h3.text-xl.font-bold.mb-2 {
+    font-size: 1.3rem;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+}
+
+.collection-card p.text-sm.text-gray-400 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Affiche deux lignes de description max */
+    -webkit-box-orient: vertical;
+}
+
+.collection-card .collection-games-list p.text-sm.text-gray-400.italic {
+    font-style: italic;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 0.5rem 0;
+}
+.collection-card .collection-games-list .collection-game {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.collection-card .collection-games-list .collection-game:last-child {
+    margin-bottom: 0; /* Supprime la marge inférieure du dernier jeu */
+}
+
+.collection-card .collection-games-list .collection-game img.w-16.h-16.object-cover.mr-4 {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-right: 0.75rem;
+    border-radius: 0.2rem;
+}
+.collection-card .collection-games-list .collection-game span {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.collection-card .mt-2.flex.justify-end button.delete-collection-btn {
+    background: none;
+    border: none;
+    color: #f44336; /* Rouge pour la suppression */
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color var(--transition-duration) ease-in-out, transform 0.1s ease;
+}
+
+.collection-card .mt-2.flex.justify-end button.delete-collection-btn:hover {
+    color: #d32f2f; /* Rouge plus foncé au hover */
+    transform: scale(1.1);
+}
+
+
+/* Collection Modal Styles */
+#collection-modal.fixed.inset-0.bg-black.bg-opacity-50 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Caché par défaut, flex pour centrer */
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+#collection-modal .bg-gray-800.p-6.rounded-lg.shadow-lg.w-full.max-w-md {
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    max-width: 500px;
+    width: 95%;
+}
+
+#collection-modal h3.text-xl.font-bold.mb-4 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+#collection-modal input[type="text"]#collection-name,
+#collection-modal textarea#collection-description {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+#collection-modal textarea#collection-description {
+    min-height: 100px; /* Hauteur minimale pour la textarea */
+}
+
+#collection-modal .flex.justify-end.space-x-4 button {
+    background-color: var(--primary);
+    color: var(--background);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+}
+
+#collection-modal .flex.justify-end.space-x-4 button#cancel-collection-btn {
+    background-color: #f44336; /* Rouge pour le bouton Annuler */
+}
+
+#collection-modal .flex.justify-end.space-x-4 button:hover,
+#collection-modal .flex.justify-end.space-x-4 button:focus {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
+
+
+/* Collection Page Styles (collection.php) */
+#collection-title.text-3xl.font-bold {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+#collection-description.text-gray-400 {
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+}
+
+#collection-games-container.grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3.gap-6 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+#collection-games-container .bg-gray-800.p-4.rounded-lg.shadow.relative {
+    background-color: var(--surface);
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    padding: 1rem;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+#collection-games-container .bg-gray-800.p-4.rounded-lg.shadow.relative:hover {
+    transform: translateY(-3px);
+    background-color: #282828; /* Légèrement plus clair au hover */
+}
+
+
+#collection-games-container img.w-full.h-48.object-cover.mb-4.rounded {
+    width: 100%;
+    height: 180px; /* Hauteur un peu plus grande pour les images dans la collection */
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+}
+
+#collection-games-container h3.text-lg.font-bold.mb-2 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+#collection-games-container p.text-sm.text-gray-400.mb-2 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+#collection-games-container button.remove-game-btn.absolute.top-2.right-2 {
+    background-color: #f44336;
+    color: var(--text-primary);
+    border: none;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#collection-games-container button.remove-game-btn.absolute.top-2.right-2:hover,
+#collection-games-container button.remove-game-btn.absolute.top-2.right-2:focus {
+    background-color: #d32f2f; /* Rouge plus foncé au hover */
+    transform: scale(1.03);
+}
+
+/* Game Search and Console Filter in Collection Page */
+#game-search.p-2.bg-gray-700.text-white.rounded,
+#console-filter.p-2.bg-gray-700.text-white.rounded {
+    width: 100%;
+    max-width: 400px; /* Limite la largeur des inputs */
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+label[for="console-filter"].mr-2 {
+    color: var(--text-primary);
+    margin-right: 0.5rem;
+}
+
+
+/* Game Modal in Collection Page */
+#game-modal.fixed.inset-0.bg-black.bg-opacity-50 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Caché par défaut, flex pour centrer */
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+#game-modal .bg-gray-800.p-6.rounded-lg.shadow-lg.w-full.max-w-2xl {
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    max-width: 90%; /* Ajustez la largeur max du modal */
+    width: 95%;
+}
+
+#game-modal h3.text-xl.font-bold.mb-4 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+#game-modal input[type="text"]#modal-game-search.p-2.bg-gray-700.text-white.rounded {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+#game-modal .overflow-y-auto.max-h-\[500px\].pr-4 {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 1rem; /* Pour l'espace pour la scrollbar */
+}
+
+#game-modal .overflow-y-auto.max-h-\[500px\].pr-4::-webkit-scrollbar {
+    width: 8px; /* Largeur de la scrollbar */
+    background-color: var(--background); /* Couleur de fond de la scrollbar */
+}
+
+#game-modal .overflow-y-auto.max-h-\[500px\].pr-4::-webkit-scrollbar-thumb {
+    background-color: var(--border-color); /* Couleur du "thumb" de la scrollbar */
+    border-radius: 0.3rem; /* Bords arrondis du thumb */
+}
+
+#game-modal #modal-games-list.grid.grid-cols-1.gap-4 {
+    display: grid;
+    grid-template-columns: 1fr; /* Une seule colonne */
+    gap: 1rem;
+}
+
+#game-modal #modal-games-list .flex.items-center.justify-between.p-2.border-b.border-gray-700 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+#game-modal #modal-games-list .flex.items-center.justify-between.p-2.border-b.border-gray-700:last-child {
+    border-bottom: none; /* Supprime la bordure du dernier élément */
+}
+
+
+#game-modal #modal-games-list .flex.items-center.justify-between.p-2.border-b.border-gray-700 span {
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+#game-modal #modal-games-list .flex.items-center.justify-between.p-2.border-b.border-gray-700 button.add-game-btn,
+#game-modal #modal-games-list .flex.items-center.justify-between.p-2.border-b.border-gray-700 button.remove-game-btn {
+    background-color: var(--primary);
+    color: var(--background);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+#game-modal #modal-games-list .flex.items-center.justify-between.p-2.border-b.border-gray-700 button.remove-game-btn {
+    background-color: #f44336; /* Rouge pour le bouton Supprimer */
+}
+
+
+#game-modal #modal-games-list .flex.items-center.justify-between.p-2.border-b.border-gray-700 button:hover,
+#game-modal #modal-games-list .flex.items-center.justify-between.p-2.border-b.border-gray-700 button:focus {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
+
+#game-modal .mt-6.flex.justify-end button#close-modal-btn {
+    background-color: var(--accent);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+}
+
+#game-modal .mt-6.flex.justify-end button#close-modal-btn:hover,
+#game-modal .mt-6.flex.justify-end button#close-modal-btn:focus {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
+
+/* Add Games Button on Collection Page */
+button#add-games-btn.bg-green-500.hover\:bg-green-700.text-white.font-bold.py-2.px-4.rounded {
+    background-color: var(--primary);
+    color: var(--background);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+button#add-games-btn.bg-green-500.hover\:bg-green-700.text-white.font-bold.py-2.px-4.rounded:hover,
+button#add-games-btn.bg-green-500.hover\:bg-green-700.text-white.font-bold.py-2.px-4.rounded:focus {
+    background-color: var(--secondary);
+    color: var(--background);
+    transform: scale(1.03);
+}
+
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    header h1.pixel-font {
+        font-size: 2rem;
+    }
+    header p {
+        font-size: 1rem;
+    }
+    .console-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    .game-card {
+        min-width: 180px;
+        max-width: 180px;
+    }
+    .game-card img.game-cover {
+        height: 120px;
+    }
+    .game-card .game-details h3 {
+        font-size: 1rem;
+    }
+    .game-card .game-details p {
+        font-size: 0.8rem;
+    }
+    .game-card .game-details .game-actions .year,
+    .game-card .game-details .game-actions .play-button {
+        font-size: 0.8rem;
+    }
+    #profile-favorites, #collections-container.collection-grid, #collection-games-container.grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3.gap-6 {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    .favorite-game-card img.w-16.h-16.object-cover.mr-4 {
+        width: 50px;
+        height: 50px;
+    }
+    .favorite-game-card div h4.text-lg.font-bold {
+        font-size: 1rem;
+    }
+    .favorite-game-card div p.text-sm.text-gray-400 {
+        font-size: 0.8rem;
+    }
+    .collection-card h3.text-xl.font-bold.mb-2 {
+        font-size: 1.2rem;
+    }
+    .collection-card p.text-sm.text-gray-400,
+    .collection-card .collection-games-list .collection-game span {
+        font-size: 0.8rem;
+    }
+    .collection-card .collection-games-list .collection-game img.w-16.h-16.object-cover.mr-4 {
+        width: 30px;
+        height: 30px;
+    }
+    #collection-modal .bg-gray-800.p-6.rounded-lg.shadow-lg.w-full.max-w-md,
+    #game-modal .bg-gray-800.p-6.rounded-lg.shadow-lg.w-full.max-w-2xl {
+        padding: 1.5rem;
+    }
+    #collection-modal h3.text-xl.font-bold.mb-4,
+    #game-modal h3.text-xl.font-bold.mb-4 {
+        font-size: 1.3rem;
+    }
+    #game-modal .overflow-y-auto.max-h-\[500px\].pr-4 {
+        max-height: 400px;
+    }
+    button#add-games-btn.bg-green-500.hover\:bg-green-700.text-white.font-bold.py-2.px-4.rounded {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    header button#menu-button,
+    .auth-form button[type="submit"]#auth-submit,
+    #collection-modal .flex.justify-end.space-x-4 button,
+    #game-modal .mt-6.flex.justify-end button#close-modal-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1.pixel-font {
+        font-size: 1.7rem;
+    }
+    header p {
+        font-size: 0.9rem;
+    }
+    .console-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    .game-card {
+        min-width: 150px;
+        max-width: 150px;
+    }
+    .game-card img.game-cover {
+        height: 100px;
+    }
+    .game-card .game-details h3 {
+        font-size: 0.9rem;
+    }
+    .game-card .game-details p {
+        font-size: 0.7rem;
+    }
+    .game-card .game-details .game-actions .year,
+    .game-card .game-details .game-actions .play-button {
+        font-size: 0.7rem;
+    }
+    #profile-favorites, #collections-container.collection-grid, #collection-games-container.grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3.gap-6 {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    .favorite-game-card img.w-16.h-16.object-cover.mr-4 {
+        width: 40px;
+        height: 40px;
+    }
+    .favorite-game-card div h4.text-lg.font-bold {
+        font-size: 0.9rem;
+    }
+    .favorite-game-card div p.text-sm.text-gray-400 {
+        font-size: 0.7rem;
+    }
+    .collection-card h3.text-xl.font-bold.mb-2 {
+        font-size: 1.1rem;
+    }
+    .collection-card p.text-sm.text-gray-400,
+    .collection-card .collection-games-list .collection-game span {
+        font-size: 0.7rem;
+    }
+    .collection-card .collection-games-list .collection-game img.w-16.h-16.object-cover.mr-4 {
+        width: 25px;
+        height: 25px;
+    }
+    #collection-modal .bg-gray-800.p-6.rounded-lg.shadow-lg.w-full.max-w-md,
+    #game-modal .bg-gray-800.p-6.rounded-lg.shadow-lg.w-full.max-w-2xl {
+        padding: 1rem;
+    }
+    #collection-modal h3.text-xl.font-bold.mb-4,
+    #game-modal h3.text-xl.font-bold.mb-4 {
+        font-size: 1.2rem;
+    }
+    #game-modal .overflow-y-auto.max-h-\[500px\].pr-4 {
+        max-height: 300px;
+    }
+    button#add-games-btn.bg-green-500.hover\:bg-green-700.text-white.font-bold.py-2.px-4.rounded {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    header button#menu-button,
+    .auth-form button[type="submit"]#auth-submit,
+    #collection-modal .flex.justify-end.space-x-4 button,
+    #game-modal .mt-6.flex.justify-end button#close-modal-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}

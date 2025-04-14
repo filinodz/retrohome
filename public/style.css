@@ -1,0 +1,1624 @@
+/* public/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Press+Start+2P&family=Inter:wght@400;500;700&display=swap');
+
+/* Dans public/style.css ou <style> de profile.php */
+
+/* Styles spécifiques à collection.php (à ajouter à public/style.css ou <style>) */
+
+.collection-container { /* Wrapper principal */
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.collection-header {
+    position: relative; /* Pour le lien retour */
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color, #333);
+}
+.collection-header .title-description {
+     text-align: center; /* Centrer titre/description par défaut */
+     max-width: 800px; /* Limiter largeur */
+     margin: 0 auto;
+}
+
+#collection-title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem); /* Taille responsive */
+    color: var(--primary, #64ffda);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-pixel, 'Press Start 2P', cursive);
+    word-break: break-word; /* Coupe les mots longs si nécessaire */
+}
+
+#collection-description {
+    font-size: 1rem;
+    color: var(--text-secondary, #b3b3b3);
+    margin-top: 0.5rem;
+     max-width: 600px;
+     margin-left: auto;
+     margin-right: auto;
+}
+
+/* Lien de retour (similaire profil) */
+.back-profile-link {
+    position: absolute;
+    top: 0rem; /* Ajuster position */
+    left: 0rem;
+    color: var(--text-secondary, #b3b3b3);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+.back-profile-link:hover {
+    color: var(--text-primary, #e0e0e0);
+    background-color: var(--surface, #1e1e1e);
+    border-color: var(--border-color, #333);
+}
+.back-profile-link i { margin-right: 0.4rem; }
+
+/* Filtres (réutilise les styles de index.php si possible) */
+.collection-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+/* Styles pour .search-box, input#game-search, .console-filter-wrapper, select#console-filter */
+/* ... (copier/adapter depuis les styles de index.php ou style.css) ... */
+.collection-filters .search-box input,
+.collection-filters .console-filter-wrapper select {
+     /* Styles de base des filtres */
+     padding: 0.6rem 1rem;
+     border: 1px solid var(--border-color);
+     border-radius: 1.5rem; /* Pilule */
+     background-color: var(--surface);
+     color: var(--text-primary);
+     font-size: 0.9rem;
+     outline: none;
+}
+.collection-filters .search-box input { padding-left: 2.5rem; /* Pour icône */ }
+.collection-filters .console-filter-wrapper select { appearance: none; padding-right: 2.5rem; }
+.collection-filters .search-box input:focus,
+.collection-filters .console-filter-wrapper select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--glow-color-primary, rgba(100, 255, 218, 0.3));
+}
+/* Styles pour l'icône search et la flèche select (si non déjà définis globalement) */
+
+
+/* Grille des jeux de la collection */
+#collection-games-container {
+    display: grid;
+    /* Adapter le minmax selon la taille désirée des cartes */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem; /* Espace avant bouton Ajouter */
+}
+
+/* Style pour une carte de jeu DANS la collection (peut hériter de .game-card) */
+.collection-game-card {
+    background-color: var(--surface, #1e1e1e);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #333);
+    overflow: hidden;
+    position: relative; /* Pour le bouton supprimer */
+    display: flex;
+    flex-direction: column;
+     transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.collection-game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.collection-game-card img.game-cover { /* Classe ajoutée en JS */
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-color, #333);
+}
+
+.collection-game-card .game-details { /* Classe ajoutée en JS */
+    padding: 1rem;
+    flex-grow: 1; /* Occupe espace restant */
+    display: flex;
+    flex-direction: column;
+}
+.collection-game-card h4 { /* Classe ajoutée en JS */
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.collection-game-card p.console-name { /* Classe ajoutée en JS */
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.8rem; /* Espace avant éventuels autres éléments */
+    flex-grow: 1; /* Pousse bouton en bas */
+}
+
+/* Bouton Supprimer du Jeu (dans la carte) */
+.remove-game-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    background-color: rgba(255, 64, 129, 0.7); /* --accent avec transparence */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.remove-game-btn:hover {
+    background-color: var(--accent, #ff4081);
+    transform: scale(1.1);
+    box-shadow: 0 0 8px var(--glow-color-secondary); /* Utiliser variable si définie */
+}
+
+/* Bouton Ajouter des jeux (en bas) */
+.add-games-button-container { /* Wrapper pour centrer */
+    text-align: center;
+    margin-top: 2rem;
+}
+#add-games-btn {
+    background-color: var(--primary, #64ffda);
+    color: var(--background, #121212);
+    padding: 0.8rem 1.8rem; /* Plus large */
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+#add-games-btn:hover {
+    opacity: 0.85;
+    box-shadow: 0 4px 12px var(--glow-color-primary, rgba(100, 255, 218, 0.4));
+    transform: translateY(-2px);
+}
+
+
+/* --- Modal Ajout Jeux --- */
+#game-modal { backdrop-filter: blur(5px); z-index: 50; }
+#game-modal .modal-content { /* Classe ajoutée au div interne */
+    background-color: var(--surface, #1e1e1e);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color, #333);
+    width: 90%;
+    max-width: 700px; /* Modal plus large */
+    display: flex; /* Utiliser flex pour l'organisation interne */
+    flex-direction: column;
+     max-height: 85vh; /* Hauteur max pour éviter dépassement écran */
+}
+#game-modal h3 { /* Titre modal */
+    font-size: 1.5rem; font-weight: 700; color: var(--primary);
+    margin-bottom: 1.5rem; text-align: center; flex-shrink: 0; /* Ne rétrécit pas */
+}
+/* Recherche dans modal */
+#game-modal .modal-search-bar { /* Wrapper pour recherche */
+    margin-bottom: 1rem; flex-shrink: 0;
+}
+#game-modal input#modal-game-search {
+    /* Utilise styles des inputs admin/filtres */
+     width: 100%; padding: 0.7rem 1rem; border: 1px solid var(--border-color);
+     border-radius: 6px; background-color: var(--background); color: var(--text-primary);
+     font-size: 1rem; outline: none;
+}
+#game-modal input#modal-game-search:focus { /* Style focus */
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--glow-color-primary);
+}
+
+/* Conteneur liste jeux scrollable */
+#game-modal .modal-scroll-container {
+    flex-grow: 1; /* Prend l'espace vertical restant */
+    overflow-y: auto;
+    padding-right: 0.5rem; /* Espace pour scrollbar */
+     margin-bottom: 1.5rem; /* Espace avant boutons */
+     /* Style scrollbar */
+     scrollbar-width: thin; scrollbar-color: var(--border-color) var(--background);
+}
+#game-modal .modal-scroll-container::-webkit-scrollbar { width: 8px; }
+#game-modal .modal-scroll-container::-webkit-scrollbar-track { background: var(--background); }
+#game-modal .modal-scroll-container::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 4px; }
+
+/* Liste des jeux dans modal */
+#modal-games-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.modal-game-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+.modal-game-item:last-child { border-bottom: none; }
+.modal-game-item:hover { background-color: rgba(255,255,255,0.05); }
+
+.modal-game-item .game-info-modal { /* Wrapper pour image+texte */
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    overflow: hidden; /* Pour ellipsis */
+}
+.modal-game-item img {
+    width: 40px; height: 40px; object-fit: cover; border-radius: 3px; flex-shrink: 0;
+}
+.modal-game-item span { color: var(--text-primary); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.modal-game-item span .console-name-modal { /* Classe ajoutée en JS */
+    font-size: 0.8em; color: var(--text-secondary); margin-left: 0.3rem;
+}
+
+/* Boutons Ajouter/Supprimer dans modal */
+.modal-game-item .action-button { /* Classe commune ajoutée en JS */
+    padding: 0.4rem 0.8rem; font-size: 0.85rem; border-radius: 4px;
+    border: none; cursor: pointer; font-weight: 600; transition: all 0.2s ease;
+    flex-shrink: 0; /* Empêche rétrécissement */
+}
+.modal-game-item .add-game-btn { /* Classe ajoutée en JS */
+    background-color: var(--primary); color: var(--background);
+}
+.modal-game-item .add-game-btn:hover { opacity: 0.8; }
+.modal-game-item .remove-game-btn { /* Classe ajoutée en JS */
+     background-color: var(--accent); color: var(--background);
+}
+.modal-game-item .remove-game-btn:hover { opacity: 0.8; }
+
+/* Boutons en bas du modal */
+#game-modal .modal-actions { /* Wrapper ajouté */
+     margin-top: auto; /* Pousse en bas si contenu court */
+     padding-top: 1rem; /* Espace au dessus */
+     border-top: 1px solid var(--border-color);
+     display: flex; justify-content: flex-end; flex-shrink: 0;
+}
+#close-modal-btn { /* Réutilise .form-button.cancel-button */
+    /* Styles hérités */
+}
+
+
+/* --- Responsive Collection --- */
+@media (max-width: 767px) {
+    .collection-container { padding: 1rem; }
+    .collection-header { margin-bottom: 1.5rem; padding-bottom: 1rem; }
+    #collection-title { font-size: clamp(1.6rem, 6vw, 2rem); }
+    #collection-description { font-size: 0.9rem; }
+    .back-profile-link { top: 0.5rem; left: 0.5rem; font-size: 0.8rem; padding: 0.3rem 0.6rem; }
+    .collection-filters { flex-direction: column; align-items: stretch; margin-bottom: 1.5rem; }
+    #collection-games-container { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; } /* Cartes plus petites */
+    .collection-game-card .game-details { padding: 0.8rem; }
+    .collection-game-card h4 { font-size: 1rem; }
+    .collection-game-card p.console-name { font-size: 0.8rem; margin-bottom: 0.6rem; }
+    .remove-game-btn { top: 0.4rem; right: 0.4rem; width: 26px; height: 26px; font-size: 0.8rem;}
+    .add-games-button-container { margin-top: 1.5rem; }
+    #add-games-btn { padding: 0.7rem 1.5rem; font-size: 0.9rem; }
+    #game-modal .modal-content { padding: 1rem; max-height: 80vh; }
+    #game-modal h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+    #game-modal .modal-scroll-container { max-height: 50vh; } /* Réduire hauteur scroll */
+    .modal-game-item { padding: 0.5rem 0.6rem; gap: 0.5rem; }
+    .modal-game-item img { width: 32px; height: 32px; }
+    .modal-game-item span { font-size: 0.85rem; }
+    .modal-game-item .action-button { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+    #game-modal .modal-actions { padding-top: 0.8rem; }
+    #close-modal-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+}
+
+/* --- Styles Page Profil --- */
+
+.profile-container { /* Remplacer .container si besoin de styles spécifiques */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color, #333);
+    position: relative; /* Pour les boutons absolus */
+}
+
+.profile-header .page-title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem); /* Taille responsive */
+    color: var(--primary, #64ffda);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-pixel, 'Press Start 2P', cursive);
+}
+
+/* Bouton Retour Accueil */
+.back-home-link {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: var(--text-secondary, #b3b3b3);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+.back-home-link:hover {
+    color: var(--text-primary, #e0e0e0);
+    background-color: var(--surface, #1e1e1e);
+    border-color: var(--border-color, #333);
+}
+.back-home-link i { margin-right: 0.4rem; }
+
+/* Bouton Menu Profil (styles similaires à index.php) */
+.profile-menu-button-container { /* Wrapper pour positionnement */
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+/* Styles pour #menu-button et #profile-menu hérités de style.css ou à redéfinir */
+
+
+/* Section d'informations */
+.profile-section {
+    background-color: var(--surface, #1e1e1e);
+    border-radius: 8px;
+    padding: 1.5rem 2rem; /* Padding ajusté */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #333);
+    margin-bottom: 2rem; /* Espace entre sections */
+}
+
+.profile-section h3.section-title { /* Classe commune pour titres de section */
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary, #64ffda);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border-color, #333);
+    font-family: var(--font-pixel, 'Press Start 2P', cursive); /* Police pixel */
+}
+
+.profile-section p {
+    color: var(--text-secondary, #b3b3b3);
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+.profile-section p strong {
+    color: var(--text-primary, #e0e0e0);
+    font-weight: 600; /* Moins gras que 700 */
+    margin-right: 0.5rem;
+}
+.profile-section p span { /* Pour les valeurs */
+    color: var(--text-primary, #e0e0e0);
+}
+
+
+/* Liste des favoris */
+#profile-favorites {
+    display: grid;
+    /* Répète des colonnes d'au moins 250px */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    min-height: 100px; /* Hauteur min pour voir le message "aucun favori" */
+}
+
+.favorite-game-card {
+    background-color: var(--background, #121212); /* Fond plus sombre */
+    border-radius: 6px;
+    padding: 1rem;
+    border: 1px solid var(--border-color, #333);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex; /* Utiliser flex pour aligner */
+    align-items: center; /* Centrage vertical */
+}
+.favorite-game-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Wrapper pour l'image pour contrôler sa taille */
+.favorite-game-card .cover-wrapper {
+     flex-shrink: 0; /* Empêche l'image de rétrécir */
+     margin-right: 1rem;
+     width: 64px; /* w-16 */
+     height: 64px; /* h-16 */
+     overflow: hidden; /* Cache si l'image est plus grande */
+     border-radius: 4px;
+}
+.favorite-game-card .cover-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Assure que l'image remplit le carré */
+}
+
+.favorite-game-card .game-info {
+    /* Prend l'espace restant */
+    flex-grow: 1;
+    min-width: 0; /* Important pour que le texte wrap/truncate */
+}
+
+.favorite-game-card h4 {
+    font-size: 1.1rem; /* text-lg */
+    font-weight: 700; /* font-bold */
+    color: var(--text-primary);
+    margin-bottom: 0.2rem;
+    white-space: nowrap; /* Empêche retour à la ligne */
+    overflow: hidden; /* Cache le dépassement */
+    text-overflow: ellipsis; /* Ajoute "..." */
+}
+
+.favorite-game-card p {
+    font-size: 0.875rem; /* text-sm */
+    color: var(--text-secondary, #b3b3b3); /* text-gray-400 */
+    margin-bottom: 0; /* Pas de marge en bas */
+}
+.no-favorite-message { /* Message si pas de favoris */
+    font-style: italic;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2rem 1rem;
+    grid-column: 1 / -1; /* S'étend sur toute la grille */
+}
+
+
+/* Section Collections */
+.collections-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.collections-header .section-title { /* Titre "Mes Collections" */
+    border-bottom: none; /* Pas de bordure ici */
+    margin-bottom: 0;
+     font-size: 1.8rem; /* Taille ajustée */
+}
+
+/* Bouton "Créer collection" */
+#create-collection-btn {
+    background-color: var(--primary, #64ffda);
+    color: var(--background, #121212);
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+#create-collection-btn:hover {
+    opacity: 0.85;
+    box-shadow: 0 4px 10px var(--glow-color-primary, rgba(100, 255, 218, 0.3));
+    transform: translateY(-1px);
+}
+#create-collection-btn i { margin-right: 0.3rem; } /* Espace icône */
+
+/* Grille des collections */
+#collections-container.collection-grid {
+    display: grid;
+    /* Colonnes d'au moins 300px */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem; /* Espace entre cartes */
+}
+
+/* Carte de collection */
+.collection-card {
+    background-color: var(--surface, #1e1e1e);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #333);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column; /* Contenu vertical */
+    cursor: pointer; /* Indique cliquable */
+    position: relative; /* Pour le bouton supprimer */
+}
+.collection-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.collection-card h3 { /* Nom de la collection */
+    font-size: 1.3rem; /* text-xl */
+    font-weight: 700; /* font-bold */
+    color: var(--primary, #64ffda);
+    margin-bottom: 0.5rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.collection-card p.collection-description { /* Classe ajoutée */
+    font-size: 0.9rem; /* text-sm */
+    color: var(--text-secondary); /* text-gray-400 */
+    margin-bottom: 1rem;
+    /* Limiter description à 2 lignes */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-height: 2.6em; /* Hauteur min (line-height * lignes) */
+    flex-grow: 1; /* Pousse les jeux/bouton vers le bas */
+}
+
+/* Liste des jeux dans la carte collection */
+.collection-games-list {
+    margin-top: auto; /* Pousse vers le bas */
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border-color, #333);
+    max-height: 150px; /* Limite hauteur pour éviter cartes trop longues */
+    overflow-y: auto; /* Scroll si trop de jeux */
+     /* Style scrollbar (optionnel) */
+     scrollbar-width: thin;
+     scrollbar-color: var(--border-color) var(--background);
+}
+.collection-games-list::-webkit-scrollbar { width: 6px; }
+.collection-games-list::-webkit-scrollbar-track { background: var(--background); }
+.collection-games-list::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 3px; }
+
+.collection-games-list p.no-games-message { /* Classe ajoutée */
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 0.5rem 0;
+}
+.collection-game {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.6rem;
+}
+.collection-game:last-child { margin-bottom: 0; }
+.collection-game img {
+    width: 32px; /* w-8 */
+    height: 32px; /* h-8 */
+    object-fit: cover;
+    margin-right: 0.75rem; /* mr-3 */
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+.collection-game span {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Bouton Supprimer Collection */
+.delete-collection-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 64, 129, 0.6); /* --accent transparent */
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.15s ease;
+    padding: 0.4rem; /* Zone de clic */
+    line-height: 1;
+    position: absolute; /* Position absolue par rapport à .collection-card */
+    top: 0.8rem;
+    right: 0.8rem;
+}
+.delete-collection-btn:hover {
+    color: var(--accent, #ff4081);
+    transform: scale(1.1);
+}
+
+
+/* --- Modal Création Collection --- */
+/* Fond overlay */
+#collection-modal {
+     backdrop-filter: blur(5px);
+     z-index: 50; /* Au-dessus du reste */
+}
+/* Conteneur du modal */
+#collection-modal .modal-content { /* Classe ajoutée au div interne */
+    background-color: var(--surface, #1e1e1e);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color, #333);
+    width: 90%; /* Responsive */
+    max-width: 500px;
+}
+#collection-modal h3 { /* Titre du modal */
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary, #64ffda);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+/* Champs du modal (réutilise .form-group ou style spécifique) */
+#collection-modal input[type="text"],
+#collection-modal textarea {
+     /* Utiliser les styles de .form-group input/textarea */
+     width: 100%;
+     padding: 0.8rem 1rem;
+     border: 1px solid var(--border-color, #333);
+     border-radius: 6px;
+     background-color: var(--background, #121212);
+     color: var(--text-primary, #e0e0e0);
+     font-size: 1rem;
+     margin-bottom: 1rem;
+     outline: none;
+}
+#collection-modal input[type="text"]:focus,
+#collection-modal textarea:focus {
+    border-color: var(--primary, #64ffda);
+    box-shadow: 0 0 0 3px var(--glow-color-primary, rgba(100, 255, 218, 0.3));
+}
+#collection-modal textarea { min-height: 100px; resize: vertical; }
+
+/* Boutons du modal (réutilise .form-actions, .form-button) */
+#collection-modal .form-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+/* Les styles .form-button.submit-button et .cancel-button s'appliquent */
+
+
+/* --- Responsive pour Profil --- */
+@media (max-width: 767px) {
+    .profile-container { padding: 1rem; }
+    .profile-header { margin-bottom: 2rem; padding-bottom: 1rem; }
+    .profile-header .page-title { font-size: clamp(1.6rem, 6vw, 2rem); }
+    .back-home-link { top: 0.5rem; left: 0.5rem; font-size: 0.8rem; padding: 0.3rem 0.6rem;}
+    .profile-menu-button-container { top: 0.5rem; right: 0.5rem; }
+
+    /* Empiler les sections Info et Favoris */
+     .main-profile-grid { /* Wrapper à ajouter autour des 2 premières sections */
+         display: flex;
+         flex-direction: column;
+         gap: 2rem;
+     }
+
+    .profile-section { padding: 1rem 1.2rem; margin-bottom: 1.5rem;}
+    .profile-section h3.section-title { font-size: 1.3rem; margin-bottom: 1rem;}
+    .profile-section p { font-size: 0.9rem; margin-bottom: 0.6rem;}
+
+    #profile-favorites { grid-template-columns: 1fr; gap: 0.8rem; } /* Une colonne pour favoris */
+    .favorite-game-card { padding: 0.8rem; }
+    .favorite-game-card .cover-wrapper { width: 48px; height: 48px; margin-right: 0.8rem; }
+    .favorite-game-card h4 { font-size: 1rem; }
+    .favorite-game-card p { font-size: 0.8rem; }
+
+    .collections-header .section-title { font-size: 1.5rem; }
+    #create-collection-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    #collections-container.collection-grid { grid-template-columns: 1fr; gap: 1rem; } /* Une colonne */
+    .collection-card { padding: 1rem; }
+    .collection-card h3 { font-size: 1.1rem; }
+    .collection-card p.collection-description { font-size: 0.85rem; min-height: 2.4em;}
+    .delete-collection-btn { top: 0.5rem; right: 0.5rem; font-size: 0.9rem; }
+
+    #collection-modal .modal-content { padding: 1.5rem; width: 95%; }
+    #collection-modal h3 { font-size: 1.3rem; }
+    #collection-modal .form-actions button { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+}
+
+/* Variables et thème moderne sombre avec accentuation */
+:root {
+    --primary: #64ffda;          /* Cyan accentué */
+    --secondary: #f4ff81;        /* Jaune doux secondaire */
+    --accent: #ff4081;           /* Rose accentué pour actions */
+    --background: #121212;       /* Fond sombre profond */
+    --surface: #1e1e1e;          /* Surface légèrement plus claire */
+    --text-primary: #e0e0e0;      /* Texte principal gris très clair (meilleur contraste que blanc pur) */
+    --text-secondary: #b3b3b3;   /* Texte secondaire gris clair */
+    --border-color: #333333;     /* Bordures discrètes */
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Ombre portée subtile */
+    --transition-duration: 0.2s; /* Durée transition plus rapide */
+    --font-pixel: 'Press Start 2P', cursive;
+    --font-header: 'Roboto Condensed', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --star-empty-color: #555;     /* Couleur étoile vide */
+    --star-full-color: #f4ff81;   /* Couleur étoile pleine (jaune secondaire) */
+    --star-half-color: #aaffae;   /* Couleur étoile demi (mix?) */
+}
+
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth; /* Pour des transitions de scroll fluides */
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.6; /* Légère augmentation pour lisibilité */
+    min-height: 100vh;
+    overflow-x: hidden; /* Empêche le scroll horizontal global */
+}
+
+/* Typographie globale */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-header);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary); /* Assure couleur par défaut */
+}
+
+p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color var(--transition-duration) ease-in-out;
+}
+
+a:hover {
+    color: var(--secondary);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Empêche espace sous l'image */
+}
+
+/* Utilitaires */
+.pixel-font {
+    font-family: var(--font-pixel);
+}
+.sr-only { /* Pour cacher visuellement mais garder accessible (ex: radio buttons) */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+
+/* Conteneur principal */
+.container {
+    max-width: 1280px; /* Légèrement plus large */
+    margin: 0 auto;
+    padding: 1rem 1.5rem; /* Ajustement padding */
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 2rem; /* Réduit un peu */
+    padding-bottom: 1.5rem; /* Réduit un peu */
+    border-bottom: 1px solid var(--border-color);
+}
+
+header h1.pixel-font {
+    font-size: clamp(2rem, 5vw, 2.8rem); /* Taille responsive */
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5), 3px 3px 0 var(--accent); /* Ombre double */
+}
+
+header p {
+    font-size: clamp(1rem, 2.5vw, 1.1rem); /* Taille responsive */
+    color: var(--text-secondary);
+    max-width: 600px; /* Limite largeur sous-titre */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Bouton Profil (utilise les variables CSS) */
+header button#menu-button {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease, border-color var(--transition-duration) ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+header button#menu-button:hover,
+header button#menu-button:focus {
+    background-color: var(--background); /* Inversion légère */
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+header button#menu-button svg {
+    transition: transform var(--transition-duration) ease;
+}
+header button#menu-button[aria-expanded="true"] svg {
+     transform: rotate(180deg);
+}
+
+
+/* Menu Profil Déroulant */
+#profile-menu {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 0.3rem;
+    box-shadow: var(--box-shadow);
+    overflow: hidden; /* Pour le border-radius sur les enfants */
+    z-index: 50; /* Assure qu'il est au-dessus */
+}
+
+#profile-menu a {
+    display: block;
+    padding: 0.6rem 1.2rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    transition: background-color var(--transition-duration) ease-in-out, color var(--transition-duration) ease;
+}
+
+#profile-menu a:hover {
+    background-color: var(--primary);
+    color: var(--background); /* Texte sombre sur fond primaire */
+}
+
+/* Console Selector */
+.console-selector {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem; /* Espace entre boutons */
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.console-button {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem; /* Padding ajusté */
+    border-radius: 1.5rem; /* Boutons plus arrondis (pilule) */
+    cursor: pointer;
+    transition: all var(--transition-duration) ease-in-out;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: inline-flex; /* Important pour aligner contenu */
+    align-items: center;
+    gap: 0.4rem; /* Espace entre logo et texte si présent */
+    font-size: 0.9rem;
+    line-height: 1; /* Empêche hauteur anormale */
+}
+
+.console-button img.console-logo-button {
+    height: 20px; /* Taille logo ajustée */
+    width: auto;
+    object-fit: contain;
+}
+
+.console-button:hover {
+    background-color: var(--background);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.console-button.active {
+    background-color: var(--primary);
+    color: var(--background);
+    border-color: var(--primary);
+    box-shadow: 0 2px 5px rgba(100, 255, 218, 0.3); /* Ombre colorée */
+    transform: translateY(-1px); /* Léger effet enfoncé */
+}
+.console-button.active img.console-logo-button {
+    /* Optionnel: changer le filtre du logo quand actif */
+    /* filter: brightness(0) invert(1); */
+}
+
+
+/* Filtres (recherche + console) */
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2.5rem; /* Plus d'espace avant les jeux */
+    align-items: center;
+    justify-content: center; /* Centre les filtres */
+}
+
+/* Champ de recherche */
+.search-box {
+    position: relative;
+    min-width: 200px; /* Largeur minimale */
+    max-width: 300px; /* Largeur maximale */
+    flex-grow: 1; /* Prend l'espace dispo si nécessaire */
+}
+
+.search-box input[type="text"]#game-search {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem; /* Padding ajusté pour hauteur et icône */
+    border-radius: 1.5rem; /* Pilule */
+    border: 1px solid var(--border-color);
+    background-color: var(--surface);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    transition: border-color var(--transition-duration) ease-in-out, box-shadow var(--transition-duration) ease-in-out;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); /* Ombre intérieure subtile */
+}
+.search-box input[type="text"]#game-search::placeholder{
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.search-box input[type="text"]#game-search:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.3), inset 0 1px 3px rgba(0,0,0,0.1); /* Anneau de focus + ombre */
+}
+
+.search-box .fa-search {
+    position: absolute;
+    left: 0.9rem; /* Ajusté */
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 0.9rem; /* Taille icône */
+    pointer-events: none;
+}
+
+/* Sélecteur de console (Dropdown) */
+.console-filter-wrapper {
+    position: relative;
+    min-width: 200px;
+    max-width: 250px;
+    flex-grow: 1;
+}
+
+.console-filter-wrapper select#console-filter {
+    appearance: none;
+    width: 100%;
+    padding: 0.6rem 2.5rem 0.6rem 1rem; /* Espace pour flèche */
+    border-radius: 1.5rem; /* Pilule */
+    border: 1px solid var(--border-color);
+    background-color: var(--surface);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color var(--transition-duration) ease-in-out, box-shadow var(--transition-duration) ease-in-out;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    line-height: 1.5; /* Assure hauteur correcte */
+}
+
+.console-filter-wrapper select#console-filter:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.3), inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Flèche déroulante personnalisée */
+.console-filter-wrapper::after {
+    content: '\f078'; /* Font Awesome chevron-down */
+    font-family: 'Font Awesome 6 Free'; /* Important : utiliser le bon nom de famille */
+    font-weight: 900; /* Nécessaire pour les icônes solides */
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    pointer-events: none;
+    transition: transform var(--transition-duration) ease;
+}
+.console-filter-wrapper select:focus ~ ::after { /* Optionnel: rotation flèche au focus */
+   /* transform: translateY(-50%) rotate(180deg); */
+}
+
+/* --- Grille des jeux --- */
+#games-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Taille min ajustée */
+    gap: 1.5rem; /* Espace entre cartes */
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+}
+/* Message quand aucun jeu n'est trouvé */
+#games-list .col-span-full {
+    grid-column: 1 / -1; /* S'étend sur toutes les colonnes */
+}
+
+
+/* --- Carte de jeu individuelle --- */
+.game-card {
+    background-color: var(--surface);
+    border-radius: 0.5rem; /* Bords arrondis */
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: transform var(--transition-duration) ease-in-out, box-shadow var(--transition-duration) ease-in-out;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid transparent; /* Pour la transition de bordure au hover */
+}
+
+.game-card:hover {
+    transform: translateY(-6px); /* Effet de lévitation plus prononcé */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    border-color: var(--border-color); /* Ajoute une bordure subtile au survol */
+}
+
+/* En-tête de la carte (Logo console) */
+.game-card .console-header {
+    /* background-color: rgba(0, 0, 0, 0.3); /* Moins nécessaire avec le fond sombre */
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align logo à gauche */
+    min-height: 40px; /* Hauteur minimale */
+    border-bottom: 1px solid var(--border-color);
+    /* MODIFIÉ : Plus de position relative ici */
+}
+
+.game-card .console-header img.console-logo {
+    height: 25px; /* Logo plus petit dans l'en-tête */
+    width: auto;
+    object-fit: contain;
+}
+
+/* Image de couverture */
+.game-card img.game-cover {
+    width: 100%;
+    min-height: 260px;
+    aspect-ratio: 4 / 3; /* Ratio commun pour les jaquettes */
+    object-fit: cover; /* Recouvre la zone */
+    border-bottom: 1px solid var(--border-color); /* Séparation visuelle */
+}
+
+/* Détails du jeu (Titre, description, actions, etc.) */
+.game-card .game-details {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Occupe l'espace restant */
+}
+
+.game-card .game-details .game-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    /* Gestion du texte long */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limite à 2 lignes */
+    -webkit-box-orient: vertical;
+}
+
+.game-card .game-details .game-description {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    flex-grow: 1; /* Pousse les actions vers le bas */
+    /* Gestion du texte long */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limite à 3 lignes */
+    -webkit-box-orient: vertical;
+    min-height: 4.2em; /* Hauteur minimale basée sur line-height * lines */
+}
+
+/* Section notes et actions en bas */
+.game-card .game-info-bottom {
+     margin-top: auto; /* Pousse cette section vers le bas */
+     padding-top: 0.5rem; /* Espace au-dessus */
+     border-top: 1px solid var(--border-color); /* Ligne de séparation */
+}
+
+/* Section Rating (Note moyenne + étoiles utilisateur) */
+.rating-section {
+    margin-bottom: 0.75rem; /* Espace sous les notes */
+}
+/* Conteneur note moyenne (étoiles + texte) */
+.average-rating-container {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--star-full-color); /* Couleur des étoiles moyennes */
+    font-size: 0.8rem; /* Taille des étoiles moyennes */
+    margin-bottom: 0.2rem;
+}
+.average-rating-container .average-rating { /* Texte (X votes) */
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Etoiles de notation utilisateur */
+.user-rating-stars {
+    /* Styles pour le conteneur des étoiles cliquables */
+}
+
+/* --- Styles pour les étoiles de notation interactives --- */
+.rating { /* Le conteneur généré par JS */
+    display: inline-flex; /* Aligne les étoiles horizontalement */
+    flex-direction: row-reverse; /* Pour l'effet de hover de droite à gauche */
+    justify-content: flex-end; /* Aligne à droite dans son conteneur */
+}
+
+.rating label {
+    color: var(--star-empty-color); /* Couleur vide */
+    font-size: 1.1rem; /* Taille des étoiles cliquables */
+    padding: 0 0.1em; /* Léger espacement */
+    cursor: pointer;
+    transition: color var(--transition-duration) ease;
+}
+
+.rating label::before {
+    content: '\f005'; /* étoile vide (Font Awesome Free Regular) */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 400; /* Regular */
+}
+
+/* Change la couleur au survol (et étoiles précédentes) */
+.rating label:hover,
+.rating label:hover ~ label {
+    color: var(--star-full-color);
+}
+.rating label:hover::before,
+.rating label:hover ~ label::before {
+    content: '\f005'; /* étoile pleine (Font Awesome Free Solid) */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900; /* Solid */
+}
+
+
+/* Change la couleur des étoiles sélectionnées */
+.rating input:checked ~ label {
+    color: var(--star-full-color);
+}
+.rating input:checked ~ label::before {
+     content: '\f005'; /* étoile pleine (Font Awesome Free Solid) */
+     font-family: 'Font Awesome 6 Free';
+     font-weight: 900; /* Solid */
+}
+
+/* Optionnel: style différent pour l'étoile exacte survolée */
+/* .rating label:hover {
+    transform: scale(1.1);
+} */
+
+
+/* Actions (Année + boutons Fav/Play) */
+.game-card .game-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem; /* Espace entre année et groupe de boutons */
+}
+
+.game-card .game-actions .year {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+.game-card .game-actions .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espace entre boutons Fav et Play */
+}
+
+/* --- Bouton Favori (MODIFIÉ) --- */
+.favorite-button {
+    background: none;
+    border: none;
+    color: var(--text-secondary); /* Couleur par défaut (non favori) */
+    font-size: 1.2rem; /* Taille de l'icône */
+    cursor: pointer;
+    transition: color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    padding: 0.3rem; /* Petite zone de clic */
+    line-height: 1; /* Empêche hauteur anormale */
+    display: inline-flex; /* Pour aligner l'icône */
+    align-items: center;
+    justify-content: center;
+}
+
+.favorite-button:hover {
+    color: var(--accent); /* Couleur au survol */
+    transform: scale(1.15);
+}
+
+.favorite-button.favorited {
+    color: var(--accent); /* Couleur quand favori */
+}
+.favorite-button.favorited i::before {
+     font-family: 'Font Awesome 6 Free';
+     font-weight: 900; /* Solid Heart */
+     content: '\f004'; /* fas fa-heart */
+}
+.favorite-button:not(.favorited) i::before {
+     font-family: 'Font Awesome 6 Free';
+     font-weight: 400; /* Regular Heart */
+     content: '\f004'; /* far fa-heart */
+}
+
+
+/* Bouton Jouer */
+.game-card .play-button {
+    background-color: var(--primary); /* Couleur principale */
+    color: var(--background); /* Texte contrasté */
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease, box-shadow var(--transition-duration) ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.9rem;
+    font-weight: 700; /* Texte en gras */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+}
+
+.game-card .play-button:hover,
+.game-card .play-button:focus {
+    background-color: var(--secondary); /* Changement de couleur au survol */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Bouton Prévisualisation */
+.game-card .preview-button {
+  background-color: var(--surface);
+  color: var(--primary); /* Couleur primaire */
+  border: 1px solid var(--primary); /* Bordure primaire */
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: all var(--transition-duration) ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 0.85rem;
+  display: inline-flex; /* Affichage en ligne */
+  width: 100%; /* Prend toute la largeur disponible */
+  align-items: center;
+  justify-content: center; /* Centre le contenu */
+  gap: 0.3rem;
+  margin-top: 0.75rem; /* Espace au-dessus */
+}
+
+.game-card .preview-button:hover,
+.game-card .preview-button:focus {
+    background-color: var(--primary); /* Inverse les couleurs */
+    color: var(--background);
+    transform: scale(1.03);
+     box-shadow: 0 3px 6px rgba(100, 255, 218, 0.2);
+}
+
+
+/* --- Conteneur du jeu --- */
+#game-container {
+    position: fixed;
+    inset: 0; /* Raccourci pour top/left/right/bottom = 0 */
+    background-color: rgba(0, 0, 0, 0.95); /* Fond très sombre */
+    z-index: 1000;
+    display: flex; /* Utiliser flex pour centrer */
+    align-items: center;
+    justify-content: center;
+    padding: 2rem; /* Espace autour */
+     /* display: none; par défaut via l'attribut style */
+}
+
+#game-container .back-button {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: var(--accent);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    z-index: 1001; /* Au-dessus de l'émulateur */
+    transition: background-color var(--transition-duration) ease-in-out, transform 0.1s ease;
+    box-shadow: var(--box-shadow);
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+#game-container .back-button:hover,
+#game-container .back-button:focus {
+    background-color: #e03070; /* Accent plus sombre */
+    transform: scale(1.05);
+}
+
+/* Div où l'émulateur est injecté */
+#game {
+    max-width: 100%;
+    max-height: 100%;
+    /* La taille est généralement gérée par EJS */
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); /* Lueur subtile autour du jeu */
+}
+
+
+/* --- Preview TV --- */
+#preview-container {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.85); /* Fond sombre translucide */
+    display: flex; /* Sera changé en 'flex' par JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 900; /* Sous le conteneur du jeu mais au-dessus du reste */
+    backdrop-filter: blur(4px);
+    padding: 1rem; /* Espace sur petits écrans */
+}
+
+#preview-tv {
+    position: relative;
+    width: clamp(300px, 80vw, 700px); /* Taille responsive avec min/max */
+    aspect-ratio: 4 / 3; /* Ratio TV classique */
+    background: linear-gradient(45deg, #2a2a2a, #1a1a1a); /* Dégradé pour effet TV */
+    border: 10px solid #111; /* Bordure épaisse */
+    border-radius: 15px; /* Coins arrondis TV */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0,0,0,0.5); /* Ombre externe + interne */
+    display: flex; /* Pour centrer l'écran */
+    align-items: center;
+    justify-content: center;
+}
+
+#preview-screen {
+    position: relative; /* Pour positionner le titre */
+    width: 88%; /* Taille de l'écran dans la TV */
+    height: 88%;
+    background-color: #000; /* Fond noir pour l'écran */
+    border-radius: 5px; /* Coins légèrement arrondis de l'écran */
+    overflow: hidden; /* Cache ce qui dépasse */
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1); /* Reflet interne écran */
+}
+
+#preview-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* La vidéo remplit l'écran */
+}
+
+#preview-game-title {
+   position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent); /* Dégradé en bas */
+    color: white;
+    padding: 0.8rem 0.5rem 0.5rem; /* Padding pour le titre */
+    font-size: 0.9rem;
+    text-align: center;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    /* border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px; */
+}
+
+/* Bouton Fermer Preview */
+#preview-container .tv-controls {
+  position: absolute;
+  top: -25px; /* Positionné au-dessus du cadre TV */
+  right: -5px;
+  z-index: 10; /* Au-dessus de la TV */
+}
+
+#preview-container #close-preview-btn {
+    background-color: #f44336; /* Rouge */
+    color: var(--text-primary);
+    border: none;
+    width: 35px; /* Taille bouton */
+    height: 35px;
+    border-radius: 50%; /* Rond */
+    cursor: pointer;
+    font-size: 1.1rem; /* Taille icône */
+    box-shadow: 0 3px 7px rgba(0,0,0,0.4);
+    transition: background-color var(--transition-duration), transform var(--transition-duration);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#preview-container #close-preview-btn:hover,
+#preview-container #close-preview-btn:focus {
+   background-color: #d32f2f; /* Rouge plus sombre */
+    transform: scale(1.1); /* Grossit légèrement */
+}
+
+
+/* --- Styles Auth & Profile (à conserver/adapter si nécessaire) --- */
+/* ... Conservez vos styles pour .auth-container, .profile-section, etc. ici ... */
+/* Assurez-vous qu'ils utilisent les variables CSS :root pour la cohérence */
+
+.auth-container {
+    background-color: var(--surface);
+    padding: 2.5rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    max-width: 400px;
+    width: 95%;
+    margin: 3rem auto; /* Centre verticalement et horizontalement (approximatif) */
+    text-align: center;
+}
+/* ... autres styles auth ... */
+.profile-section {
+    background-color: var(--surface);
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+}
+/* ... autres styles profile ... */
+.collection-card {
+     background-color: var(--surface);
+     border-radius: 0.5rem;
+     padding: 1.5rem;
+     box-shadow: var(--box-shadow);
+     transition: transform 0.2s ease-in-out, background-color 0.2s;
+     border: 1px solid var(--border-color);
+     cursor: pointer;
+}
+.collection-card:hover {
+    transform: translateY(-5px);
+    background-color: var(--background);
+}
+/* ... autres styles collections / modals ... */
+
+
+/* --- Styles obsolètes du Slider (Supprimés) --- */
+/*
+.games-slider { ... }
+.slider-button { ... }
+.games-list (anciennement avec overflow-x) { ... }
+.game-card (anciennement avec min/max-width fixe) { ... }
+*/
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    header h1.pixel-font {
+        font-size: clamp(1.8rem, 6vw, 2.2rem);
+    }
+    header p {
+        font-size: clamp(0.9rem, 2.8vw, 1rem);
+    }
+     /* Filtres en colonne sur mobile */
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch; /* Prend toute la largeur */
+    }
+    .search-box, .console-filter-wrapper {
+        max-width: none; /* Prend toute la largeur */
+        min-width: unset;
+    }
+
+    #games-list {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Cartes plus petites */
+        gap: 1rem;
+    }
+
+    .game-card .game-details {
+        padding: 0.8rem;
+    }
+    .game-card .game-title {
+        font-size: 1rem;
+    }
+     .game-card .game-description {
+        font-size: 0.8rem;
+        min-height: 3.8em; /* Ajuster si nécessaire */
+    }
+     .game-card .play-button,
+     .game-card .preview-button {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+     }
+     .game-card .favorite-button {
+        font-size: 1.1rem;
+     }
+     .rating label {
+         font-size: 1rem; /* Etoiles cliquables plus petites */
+     }
+
+     #preview-tv {
+         border-width: 8px;
+         border-radius: 10px;
+     }
+      #preview-container .tv-controls {
+         top: -20px;
+         right: -2px;
+      }
+      #preview-container #close-preview-btn {
+         width: 30px;
+         height: 30px;
+         font-size: 1rem;
+      }
+
+     /* Ajustements pour profile/collections si nécessaire */
+      #profile-favorites, #collections-container.collection-grid, #collection-games-container {
+         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+}
+
+@media (max-width: 480px) {
+     header { margin-bottom: 1.5rem; padding-bottom: 1rem; }
+      header h1.pixel-font {
+          font-size: clamp(1.5rem, 7vw, 1.8rem);
+          text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), 2px 2px 0 var(--accent);
+      }
+      header p { font-size: 0.85rem;}
+      header .absolute.top-4.right-4 { top: 0.5rem; right: 0.5rem;} /* Ajuste position bouton profil */
+      header button#menu-button { padding: 0.4rem 0.8rem; font-size: 0.8rem;}
+
+     .console-selector { gap: 0.5rem; margin-bottom: 1.5rem; }
+     .console-button { padding: 0.4rem 0.8rem; font-size: 0.8rem;}
+     .console-button img.console-logo-button { height: 16px; }
+
+     .filters-container { margin-bottom: 1.5rem; gap: 0.8rem;}
+     .search-box input[type="text"]#game-search,
+     .console-filter-wrapper select#console-filter {
+         font-size: 0.85rem;
+         padding-top: 0.5rem;
+         padding-bottom: 0.5rem;
+         border-radius: 1rem;
+     }
+      .search-box .fa-search { left: 0.8rem; }
+       .console-filter-wrapper::after { right: 0.8rem; font-size: 0.7rem;}
+
+
+    #games-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Encore plus petites */
+        gap: 0.8rem;
+    }
+    /* Adapte la taille de la police et padding dans les cartes pour petits écrans */
+    .game-card .game-details { padding: 0.6rem; }
+    .game-card .game-title { font-size: 0.9rem; -webkit-line-clamp: 2; }
+    .game-card .game-description { font-size: 0.75rem; -webkit-line-clamp: 2; min-height: 2.8em; margin-bottom: 0.5rem;}
+    .game-card .console-header { padding: 0.3rem 0.6rem; min-height: 30px;}
+    .game-card .console-header img.console-logo { height: 18px; }
+    .game-card .game-info-bottom { padding-top: 0.4rem;}
+    .rating-section { margin-bottom: 0.5rem; }
+    .average-rating-container { font-size: 0.7rem; gap: 0.2rem;}
+    .average-rating-container .average-rating { font-size: 0.65rem;}
+    .rating label { font-size: 0.9rem;}
+    .game-card .game-actions .year { font-size: 0.75rem; }
+    .game-card .play-button { font-size: 0.75rem; padding: 0.3rem 0.6rem; }
+    .game-card .favorite-button { font-size: 1rem; padding: 0.2rem;}
+    .game-card .preview-button { font-size: 0.7rem; padding: 0.3rem 0.6rem; margin-top: 0.5rem; }
+
+     #game-container { padding: 0.5rem; }
+      #game-container .back-button { padding: 0.4rem 0.8rem; font-size: 0.8rem; top: 0.5rem; left: 0.5rem;}
+
+     #preview-container { padding: 0.5rem; }
+      #preview-tv { border-width: 6px; border-radius: 8px;}
+      #preview-game-title { font-size: 0.8rem; padding: 0.6rem 0.4rem 0.4rem; }
+      #preview-container .tv-controls { top: -18px; right: 0px; }
+      #preview-container #close-preview-btn { width: 25px; height: 25px; font-size: 0.9rem; }
+
+}
