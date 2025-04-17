@@ -129,7 +129,6 @@ Les contributions sont les bienvenues ! Si vous souhaitez améliorer RetroHome :
 5.  Pushez vers votre branche (`git push origin feature/ma-nouvelle-feature`).
 6.  Ouvrez une Pull Request sur le dépôt principal.
 
-*(Optionnel : Ajoutez un lien vers un fichier CONTRIBUTING.md détaillé)*
 
 ## 📄 Licence
 
@@ -141,7 +140,7 @@ Ce projet est distribué sous la licence MIT. Voir le fichier `LICENSE` pour plu
 
 *   **ScreenScraper.fr :** Pour leur incroyable base de données et API dédiées au rétrogaming.
 *   **Libretro & RetroArch :** Pour leur travail fondamental sur l'émulation multiplateforme.
-*   **[Nom de la librairie JS d'émulation] :** Pour avoir rendu l'émulation possible dans le navigateur.
+*   **EmulatorJS :** Pour avoir rendu l'émulation possible dans le navigateur.
 *   Tailwind CSS, Font Awesome, Animate.css.
 
 ---
