@@ -1,7 +1,6 @@
 # RetroHome 🕹️ - Votre Plateforme de Jeux Rétro en Ligne
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!-- Adapte la licence si besoin -->
-<!-- Ajoute d'autres badges si pertinent (Build Status, etc.) -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
 <p align="center">
   <img src="public/img/logo.png" alt="RetroHome Logo" width="300"/>
@@ -9,7 +8,6 @@
 
 Revivez la magie des classiques ! RetroHome est une plateforme web open-source vous permettant de jouer à vos jeux vidéo rétro préférés directement dans votre navigateur. Gérez votre bibliothèque, découvrez de nouveaux titres, organisez vos favoris et partagez la nostalgie.
 
-<!-- Optionnel: Ajoute une ou deux captures d'écran ici -->
 <!--
 <p align="center">
   <img src="docs/screenshot_home.png" alt="Capture d'écran Accueil" width="45%">
@@ -134,7 +132,6 @@ Les contributions sont les bienvenues ! Si vous souhaitez améliorer RetroHome :
 
 Ce projet est distribué sous la licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-*(Assurez-vous d'ajouter un fichier LICENSE contenant le texte de la licence MIT)*
 
 ## 🙏 Remerciements
 
