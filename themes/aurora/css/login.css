@@ -190,3 +190,10 @@ body.aurora-login::before {
 #auth-message { margin-top: 14px; font-size: .85rem; font-weight: 700; min-height: 20px; }
 #auth-message.success { color: #34d399; }
 #auth-message.error { color: #f87171; }
+
+.auth-foot { margin: 24px 0 0; font-size: .72rem; color: var(--a-text-dim); opacity: .7; }
+.auth-foot i { margin: 0 2px; }
+
+/* Sélecteur de langue en haut à droite */
+.login-lang .language-selector,
+.login-lang select { border-radius: 10px; }

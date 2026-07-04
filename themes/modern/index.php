@@ -148,9 +148,10 @@
     <?php include __DIR__ . '/footer.php'; ?>
 
     <!-- Inclusion des scripts -->
-    <script>const SITE_URL = "<?= SITE_URL ?>";</script>
+    <script>const SITE_URL = "<?= SITE_URL ?>"; window.RETROHOME_USER = "<?= htmlspecialchars($_SESSION['username'] ?? '', ENT_QUOTES) ?>";</script>
     <?php include BASE_PATH . '/includes/js_translations.php'; ?>
     <script src="<?= SITE_URL ?>/public/js/video-preview.js"></script>
+    <script src="<?= SITE_URL ?>/public/js/netplay-fix.js"></script>
     <script src="<?= SITE_URL ?>/public/js/script.js"></script>
     <script>
         // Menu logic is now handled globally in script.js

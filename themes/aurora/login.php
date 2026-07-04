@@ -102,11 +102,14 @@ try {
 
                 <button id="auth-toggle"><?= __('create_account') ?></button>
                 <div id="auth-message"></div>
+
+                <p class="auth-foot">
+                    &copy; <?= date('Y') ?> <?= SITE_NAME ?> — <?= __('made_with_love') ?? 'Made with' ?>
+                    <i class="fas fa-heart" style="color:#f472b6;"></i> <b>FilinoDZ</b>
+                </p>
             </div>
         </section>
     </div>
-
-    <?php include __DIR__ . '/footer.php'; ?>
 
     <script>
         const games = <?= json_encode($randomGames) ?>;

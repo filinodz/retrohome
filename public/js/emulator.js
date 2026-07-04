@@ -142,9 +142,18 @@
     script.src = DATA_PATH + 'loader.js';
     script.async = true;
     document.body.appendChild(script);
+    // Le correctif d'inputs netplay + l'auto-pseudo sont gérés par netplay-fix.js.
   }
 
-  // Ouvre le menu netplay INTÉGRÉ au moteur (création / liste / rejoindre)
+  // Pseudo netplay : priorité au compte connecté (via netplay-fix.js), sinon aléatoire.
+  function netplayNick() {
+    if (window.RHNetplay && typeof window.RHNetplay.nick === 'function') return window.RHNetplay.nick();
+    if (typeof window.RETROHOME_USER === 'string' && window.RETROHOME_USER.trim()) return window.RETROHOME_USER.trim().slice(0, 20);
+    return localStorage.getItem('netplay_nickname') || ('Player' + Math.floor(1000 + Math.random() * 9000));
+  }
+
+  // Ouvre le menu netplay INTÉGRÉ au moteur (création / liste / rejoindre).
+  // L'auto-pseudo est géré par netplay-fix.js (enrobe openNetplayMenu).
   function openNativeNetplay() {
     var em = window.EJS_emulator;
     if (em && typeof em.openNetplayMenu === 'function') {
@@ -157,7 +166,7 @@
   // Best-effort : si l'auto-join échoue, le menu netplay reste ouvert avec la
   // room visible pour un "Join" manuel.
   function joinRoom(core, romUrl, name, sessionid, roomName) {
-    var nick = localStorage.getItem('netplay_nickname') || ('Player' + Math.floor(1000 + Math.random() * 9000));
+    var nick = netplayNick();
     startGame(core, romUrl, name);
 
     var tries = 0;

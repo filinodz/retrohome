@@ -157,8 +157,10 @@
     <script>
         window.SITE_URL = "<?= SITE_URL ?>";
         window.RETROHOME_NETPLAY_URL = "<?= htmlspecialchars($settings->get('netplay_url', ''), ENT_QUOTES) ?>";
+        window.RETROHOME_USER = "<?= htmlspecialchars($_SESSION['username'] ?? '', ENT_QUOTES) ?>";
     </script>
     <script src="<?= SITE_URL ?>/public/vendor/socketio/socket.io.min.js"></script>
+    <script src="<?= SITE_URL ?>/public/js/netplay-fix.js"></script>
     <script src="<?= SITE_URL ?>/public/js/emulator.js"></script>
     <script src="<?= SITE_URL ?>/public/js/game-page.js"></script>
     <script>
