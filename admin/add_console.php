@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-    <link rel="stylesheet" href="public/css/admin_style.css">
+    <link rel="stylesheet" href="public/css/admin_style.css?v=<?= @filemtime(__DIR__ . "/public/css/admin_style.css") ?>">
     <style>
         .form-group label {
             display: block;

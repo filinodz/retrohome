@@ -1384,3 +1384,23 @@ select:focus-visible {
         font-size: 0.85rem;
     }
 }
+/* ── Multiplayer : badge cartes + lien nav (ajout RetroHome) ── */
+.game-card, .collection-game-card { position: relative; }
+.mp-badge {
+    position: absolute; top: 10px; left: 10px; z-index: 3;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 0.62rem; font-weight: 800; letter-spacing: .5px;
+    color: #05121a; background: linear-gradient(120deg, #22d3ee, #34d399);
+    box-shadow: 0 4px 14px rgba(34, 211, 238, 0.4);
+    pointer-events: none; text-transform: uppercase;
+}
+.mp-badge i { font-size: 0.7em; }
+.mp-nav-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem;
+    color: #05121a; background: linear-gradient(120deg, #22d3ee, #34d399);
+    box-shadow: 0 6px 18px rgba(34, 211, 238, 0.3);
+    transition: transform .18s, filter .18s; white-space: nowrap; text-decoration: none;
+}
+.mp-nav-link:hover { transform: translateY(-2px); filter: brightness(1.06); }

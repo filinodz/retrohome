@@ -99,6 +99,11 @@
                         </div>
                     </div>
 
+                    <a href="<?= SITE_URL ?>/multiplayer" class="mp-nav-link" title="Parties en ligne (NetPlay)">
+                        <i class="fas fa-users"></i>
+                        <span class="hidden sm:inline">Multiplayer</span>
+                    </a>
+
                     <div class="hidden lg:block">
                         <?php $langSelectorDirection = 'down'; include BASE_PATH . '/includes/LanguageSelector.php'; ?>
                     </div>

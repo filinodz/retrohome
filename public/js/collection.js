@@ -96,8 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const coverUrl = game.cover ? (game.cover.startsWith('http') ? game.cover : SITE_URL + '/' + game.cover) : SITE_URL + '/public/img/default_cover.png';
 
+        const mpBadge = (game.multiplayer == 1)
+            ? `<div class="mp-badge" title="Jouable en réseau (NetPlay)"><i class="fas fa-users"></i> MULTI</div>`
+            : '';
         card.innerHTML = `
-             <img src="${coverUrl}" alt="${game.title}" class="game-cover" loading="lazy"> 
+             <img src="${coverUrl}" alt="${game.title}" class="game-cover" loading="lazy">
+             ${mpBadge}
              <div class="game-details">
                  <h4>${game.title || 'Titre inconnu'}</h4>
                  <p class="console-name">${game.console_name || 'Console inconnue'}</p>

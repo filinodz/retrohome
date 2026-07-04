@@ -56,6 +56,7 @@ CREATE TABLE `games` (
   `cover` varchar(255) DEFAULT NULL,
   `preview` varchar(255) DEFAULT NULL,
   `rom_path` varchar(255) NOT NULL,
+  `multiplayer` tinyint(1) NOT NULL DEFAULT '0',
   `sort_order` int DEFAULT '0',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

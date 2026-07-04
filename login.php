@@ -3,7 +3,7 @@ require_once 'config.php';
 
 // Redirect to index.php if logged in
 if (isset($_SESSION['user_id'])) {
-    header('Location: /');
+    header('Location: ' . SITE_URL . '/');
     exit();
 }
 

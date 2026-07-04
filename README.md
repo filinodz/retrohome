@@ -121,13 +121,27 @@ Autorisez le **port 3000** dans le pare-feu Windows si demandé.
 
 ### 2. Jouer
 
-1. **Hôte** : ouvrez un jeu → bouton **NETPLAY** → onglet **Héberger** → **Créer la room** → partagez le code.
-2. **Ami** : ouvrez **le même jeu** → **NETPLAY** → **Rejoindre** → saisissez le code.
-3. La partie démarre en synchronisation. Un bouton **?** dans le jeu rappelle ces étapes.
+Le netplay utilise le **menu intégré d'EmulatorJS** (relais serveur, fiable en LAN) :
 
-> Par défaut, le client contacte `http://<hôte>:3000`. Pour pointer vers une autre
-> machine, définissez `netplay_url` dans les **réglages de l'admin**
-> (ex. `http://192.168.1.20:3000`).
+1. **Hôte** : ouvrez un jeu → bouton **NETPLAY** (ou l'icône réseau de la barre de l'émulateur) →
+   **Create a room** → donnez un nom.
+2. **Ami** : ouvrez **le même jeu** → **NETPLAY** → la room de l'hôte apparaît dans la **liste** →
+   cliquez sur **Join**.
+3. La partie se synchronise automatiquement. Le bouton **?** dans le jeu rappelle ces étapes.
+
+> **Il n'est pas nécessaire d'activer le HTTPS** : le netplay passe par Socket.IO (relais serveur),
+> pas par WebRTC en contexte sécurisé.
+
+**Configuration réseau :**
+- Par défaut, le client contacte `http://<hôte>:3000`. Pour cibler une autre machine, définissez
+  `netplay_url` dans les **réglages admin** (ex. `http://192.168.1.20:3000`).
+- **Pour jouer depuis un autre PC**, l'ami ouvre simplement le site via l'**IP de l'hôte**
+  (ex. `http://192.168.1.20/retrohome`). `SITE_URL` s'adapte automatiquement à l'hôte utilisé —
+  aucun réglage manuel n'est nécessaire, les jeux et l'API se chargent correctement pour chacun.
+
+### 3. Rubrique « Multiplayer »
+Le menu **Multiplayer** liste en temps réel les parties NetPlay en cours sur le réseau et permet
+de les **rejoindre en un clic**. Les jeux compatibles affichent un badge **MULTI**.
 
 ### 🎯 Jeux/systèmes recommandés pour le NetPlay
 

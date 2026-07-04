@@ -306,8 +306,12 @@ function renderCurrentPage() {
             const gameCard = document.createElement('div');
             gameCard.className = 'game-card glass animate__animated animate__fadeIn';
             gameCard.dataset.gameId = game.id;
+            const mpBadge = (game.multiplayer == 1)
+                ? `<div class="mp-badge" title="Jouable en réseau (NetPlay)"><i class="fas fa-users"></i> MULTI</div>`
+                : '';
             gameCard.innerHTML = `
             <img src="${getAssetUrl(game.cover)}" alt="${game.title}" loading="lazy">
+            ${mpBadge}
             <div class="game-overlay game-details">
                 <div class="pixel-text" style="color: var(--primary); font-size: 0.5rem; margin-bottom: 5px;">${game.console_name}</div>
                 <h3 class="game-title" style="font-size: 0.9rem; margin: 0 0 10px 0; font-family: var(--font-heading); font-weight: 800; color: white;">${game.title}</h3>
@@ -677,7 +681,15 @@ function startGame(core, romUrl, gameName) {
     backButton.style.cssText = `flex: 1; background: #cc0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;`;
     const netplayButton = document.createElement('button');
     netplayButton.innerHTML = `<i class="fas fa-network-wired"></i> NETPLAY`;
-    netplayButton.onclick = (e) => { e.preventDefault(); openNetplayModal(); };
+    netplayButton.onclick = (e) => {
+        e.preventDefault();
+        // On ouvre le menu netplay NATIF d'EmulatorJS (fiable, relais serveur).
+        if (window.EJS_emulator && typeof window.EJS_emulator.openNetplayMenu === 'function') {
+            window.EJS_emulator.openNetplayMenu();
+        } else {
+            alert("Le jeu n'est pas encore complètement chargé. Réessayez dans un instant.");
+        }
+    };
     netplayButton.style.cssText = `flex: 1; background: #0088cc; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;`;
     controlsBar.appendChild(backButton);
     controlsBar.appendChild(netplayButton);
@@ -720,13 +732,10 @@ function startGame(core, romUrl, gameName) {
         { urls: "stun:stun1.l.google.com:19302" }
     ];
 
+    // Le netplay est désormais géré par le menu NATIF d'EmulatorJS
+    // (bouton NETPLAY -> openNetplayMenu). Plus de "hijack" custom.
     window.EJS_onGameStart = function () {
-        console.log("[Netplay] Jeu démarré. Attente initialisation core...");
-        if (netplayRoomId) {
-            // On attend 2 secondes que l'émulateur ait fini sa connexion automatique interne
-            // pour ensuite la "voler" ou la réutiliser
-            setTimeout(connectToNetplay, 2000);
-        }
+        console.log("[Netplay] Jeu démarré. Bouton NETPLAY = menu natif EmulatorJS.");
     };
 
     setTimeout(() => {

@@ -771,3 +771,67 @@ input[type="file"]:hover::file-selector-button {
         position: static;
     }
 }
+/* ═══════════════════════════════════════════════════════════════════
+   CORRECTIF : boutons & actions de formulaire admin
+   Ces classes (.form-button, .submit-button, .form-actions…) étaient
+   utilisées dans les templates mais non stylées -> Tailwind les réduisait
+   à padding:0 ("boutons collés"). On leur donne un style cohérent.
+   ═══════════════════════════════════════════════════════════════════ */
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.form-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 13px 26px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.8rem;
+    font-family: inherit;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), filter var(--transition-fast);
+}
+.form-button:hover { transform: translateY(-2px); }
+.form-button:active { transform: translateY(0); }
+
+/* Actions principales (enregistrer / ajouter) */
+.form-button.submit-button,
+.form-button.add-button,
+button.submit-button,
+input[type="submit"].form-button {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #05121a;
+    box-shadow: 0 6px 20px var(--primary-glow);
+}
+.form-button.submit-button:hover,
+.form-button.add-button:hover { filter: brightness(1.08); box-shadow: 0 10px 28px var(--primary-glow); }
+
+/* Actions secondaires (annuler / retour) */
+.form-button.cancel-button,
+.form-button.back-button {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border-color: var(--glass-border);
+}
+.form-button.cancel-button:hover,
+.form-button.back-button:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.2); }
+
+/* Action destructive */
+.form-button.delete-button {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    border-color: rgba(239, 68, 68, 0.35);
+}
+.form-button.delete-button:hover { background: #ef4444; color: #fff; box-shadow: 0 6px 20px rgba(239,68,68,0.4); }

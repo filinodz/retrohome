@@ -1666,3 +1666,56 @@ body::before {
 
 /* Sélection de texte */
 ::selection { background: rgba(139, 92, 246, 0.4); color: #fff; }
+
+/* Badge Multiplayer / NetPlay sur les cartes */
+.game-card, .collection-game-card { position: relative; }
+.mp-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: .5px;
+    color: #05121a;
+    background: linear-gradient(120deg, #22d3ee, #34d399);
+    box-shadow: 0 4px 14px rgba(34, 211, 238, 0.4);
+    pointer-events: none;
+    text-transform: uppercase;
+}
+.mp-badge i { font-size: 0.7em; }
+
+/* Lien de navigation "Multiplayer" */
+.mp-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #05121a;
+    background: linear-gradient(120deg, #22d3ee, #34d399);
+    box-shadow: 0 6px 18px rgba(34, 211, 238, 0.3);
+    transition: transform .18s var(--ease-smooth), filter .18s, box-shadow .18s;
+    white-space: nowrap;
+}
+.mp-nav-link:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 10px 26px rgba(34, 211, 238, 0.45); }
+.mp-nav-dot {
+    background: #05121a;
+    color: #34d399;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+}

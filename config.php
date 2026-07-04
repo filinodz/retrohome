@@ -60,10 +60,27 @@ if (!defined('SCREENSCRAPER_USER')) {
 }
 
 // Site Configuration
+// SITE_URL est adaptatif : on conserve le CHEMIN de base configuré (ex. /retrohome)
+// mais on utilise l'HÔTE de la requête courante. Ainsi le site fonctionne aussi bien
+// via http://localhost/... que via http://<IP-LAN>/... (indispensable pour le NetPlay
+// inter-machines et pour éviter les blocages cross-origin sur les fetch/fonts).
 if (!defined('SITE_URL')) {
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $default_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $host . str_replace(basename($_SERVER['PHP_SELF'] ?? ''), '', $_SERVER['PHP_SELF'] ?? '');
-    define('SITE_URL', rtrim($settings->get('site_url', $default_url), '/'));
+    $configured = rtrim($settings->get('site_url', ''), '/');
+
+    if (!empty($_SERVER['HTTP_HOST'])) {
+        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+        // Chemin de base : depuis le réglage si présent, sinon déduit de la requête.
+        $basePath = '';
+        if ($configured !== '') {
+            $basePath = parse_url($configured, PHP_URL_PATH) ?: '';
+        } else {
+            $basePath = str_replace(basename($_SERVER['PHP_SELF'] ?? ''), '', $_SERVER['PHP_SELF'] ?? '');
+        }
+        define('SITE_URL', rtrim($scheme . '://' . $_SERVER['HTTP_HOST'] . '/' . trim($basePath, '/'), '/'));
+    } else {
+        // Contexte CLI / sans requête : on retombe sur le réglage.
+        define('SITE_URL', $configured ?: 'http://localhost');
+    }
 }
 
 if (!defined('SITE_NAME')) {

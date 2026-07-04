@@ -1,10 +1,23 @@
+/*
+ * RetroHome — Serveur NetPlay (LAN)
+ * ---------------------------------------------------------------
+ * Implémente le protocole netplay OFFICIEL d'EmulatorJS (relais serveur).
+ * Événements Socket.IO : open-room, join-room, data-message, disconnect.
+ * Endpoint HTTP : GET /list?game_id=… -> liste des rooms ouvertes.
+ *
+ * Note : le filtrage par "domain" est volontairement IGNORÉ afin que
+ * l'hôte (ex. localhost) et un ami (ex. 192.168.x.x) se voient malgré
+ * des URLs d'accès différentes sur le même LAN.
+ */
 const http = require('http');
 const os = require('os');
 const { Server } = require('socket.io');
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-// Retourne les adresses IPv4 locales (LAN) pour les afficher aux joueurs
+// rooms[sessionid] = { room_name, max, password, game_id, players: { userid: extra } }
+const rooms = {};
+
 function getLanAddresses() {
   const nets = os.networkInterfaces();
   const addrs = [];
@@ -16,188 +29,131 @@ function getLanAddresses() {
   return addrs;
 }
 
-// Stockage en mémoire des salles : { "ROOM_ID": { "SOCKET_ID": { userData } } }
-const rooms = {};
+function playerCount(room) {
+  return room ? Object.keys(room.players).length : 0;
+}
 
 const httpServer = http.createServer((req, res) => {
-  // 1. En-têtes CORS (Permissif pour le réseau local)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-  // Gestion des requêtes "Preflight" (OPTIONS)
-  if (req.method === 'OPTIONS') {
-    res.writeHead(204);
-    res.end();
-    return;
-  }
+  const url = new URL(req.url, 'http://localhost');
 
-  // Log pour vérifier que l'émulateur "voit" le serveur HTTP
-  // console.log(`[HTTP] ${req.method} ${req.url}`);
-
-  // 2. Endpoint: Liste des salles (/list)
-  // Permet au Lobby d'afficher les parties en cours
-  if (req.url.startsWith('/list') || (req.url === '/' && req.method === 'GET' && req.url.length > 1)) {
-    const roomList = [];
-
-    // On transforme l'objet rooms en tableau propre pour le JSON
-    for (const [id, users] of Object.entries(rooms)) {
-      // On ne liste que les rooms qui ont des joueurs
-      if (Object.keys(users).length > 0) {
-        roomList.push({
-          id: id,
-          count: Object.keys(users).length,
-          users: Object.values(users) // Envoie les détails des joueurs
-        });
-      }
+  // Liste des rooms ouvertes pour un jeu donné (format attendu par EmulatorJS).
+  if (url.pathname === '/list') {
+    const gameId = url.searchParams.get('game_id');
+    const out = {};
+    for (const [sid, room] of Object.entries(rooms)) {
+      // Même jeu uniquement (domaine ignoré volontairement pour le LAN).
+      if (gameId && String(room.game_id) !== String(gameId)) continue;
+      out[sid] = {
+        room_name: room.room_name,
+        current: playerCount(room),
+        max: room.max,
+        game_id: room.game_id   // permet au lobby RetroHome de retrouver le jeu
+      };
     }
-
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(roomList));
+    res.end(JSON.stringify(out));
     return;
   }
 
-  // 3. Endpoint: Health Check (/health) — utilisé par le client pour tester le serveur
-  if (req.url.startsWith('/health')) {
+  if (url.pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok', rooms: Object.keys(rooms).length, uptime: process.uptime() }));
     return;
   }
 
-  // 4. Health Check (Racine)
-  // L'émulateur fait souvent un GET / pour vérifier si le serveur est en ligne
-  if (req.url === '/' && req.method === 'GET') {
+  if (url.pathname === '/' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Netplay Server Online');
+    res.end('RetroHome NetPlay Server Online');
     return;
   }
 
-  // 404 pour le reste
   res.writeHead(404);
   res.end('');
 });
 
-// Configuration Socket.IO
 const io = new Server(httpServer, {
-  cors: {
-    // Configuration spécifique pour votre réseau local
-    origin: [
-      "http://retrohome.local",
-      "http://retrohome.local:80",
-      "http://localhost",
-      "*" // Fallback pour le dev
-    ],
-    methods: ["GET", "POST"],
-    credentials: true
-  }
+  cors: { origin: '*', methods: ['GET', 'POST'] }
 });
 
 io.on('connection', (socket) => {
-  console.log(`[SYS] Nouveau Socket connecté : ${socket.id}`);
+  console.log(`[SYS] Socket connecté : ${socket.id}`);
 
-  // --- 1. REJOINDRE UNE SALLE (JOIN) ---
+  // --- CRÉER UNE ROOM (hôte) ---
+  socket.on('open-room', (data, callback) => {
+    const extra = (data && data.extra) || {};
+    const sid = extra.sessionid;
+    if (!sid) { if (callback) callback('missing sessionid'); return; }
+    if (rooms[sid]) { if (callback) callback('room already exists'); return; }
+
+    rooms[sid] = {
+      room_name: extra.room_name || 'Room',
+      max: parseInt(data.maxPlayers, 10) || 2,
+      password: data.password || '',
+      game_id: extra.game_id,
+      players: {}
+    };
+    rooms[sid].players[extra.userid] = extra;
+
+    socket.join(sid);
+    socket.data.sid = sid;
+    socket.data.userid = extra.userid;
+
+    console.log(`[OPEN] Room "${rooms[sid].room_name}" (${sid}) par ${extra.player_name}`);
+    if (callback) callback(null);
+  });
+
+  // --- REJOINDRE UNE ROOM (invité) ---
   socket.on('join-room', (data, callback) => {
-    const extra = data.extra || {};
-    const roomId = extra.sessionid; // L'ID de la room (ex: "XJ9D2")
+    const extra = (data && data.extra) || {};
+    const sid = extra.sessionid;
+    const room = sid && rooms[sid];
 
-    if (!roomId) {
-      console.error(`[ERR] ${socket.id} a tenté de rejoindre sans 'sessionid'`);
-      return;
-    }
+    if (!room) { if (callback) callback('room not found'); return; }
+    if (room.password && data.password !== room.password) { if (callback) callback('wrong password'); return; }
+    if (playerCount(room) >= room.max) { if (callback) callback('room full'); return; }
 
-    // Le socket rejoint le canal Socket.IO spécifique
-    socket.join(roomId);
-    socket.roomId = roomId; // On attache l'ID room au socket pour le retrouver lors de la déco
+    room.players[extra.userid] = extra;
+    socket.join(sid);
+    socket.data.sid = sid;
+    socket.data.userid = extra.userid;
 
-    // Initialisation de la room si elle n'existe pas
-    if (!rooms[roomId]) rooms[roomId] = {};
+    console.log(`[JOIN] ${extra.player_name} a rejoint "${room.room_name}" (${playerCount(room)}/${room.max})`);
 
-    // Stockage du joueur. 
-    // IMPORTANT : On utilise socket.id comme clé pour pouvoir le supprimer facilement à la déconnexion
-    const userId = socket.id;
-    rooms[roomId][userId] = extra;
-
-    console.log(`[JOIN] Room ${roomId} : Joueur ${extra.player_name} (${userId}) a rejoint.`);
-    console.log(`       Joueurs actuels : ${Object.keys(rooms[roomId]).length}`);
-
-    // A. Notifier les AUTRES joueurs qu'une nouvelle liste est dispo
-    socket.to(roomId).emit('users-updated', rooms[roomId]);
-
-    // B. Renvoyer la liste au joueur qui vient d'arriver (via le callback du client)
-    if (callback) {
-      callback(null, rooms[roomId]);
-    }
+    // Renvoyer la liste des joueurs à l'invité, et notifier tout le monde.
+    if (callback) callback(null, room.players);
+    io.to(sid).emit('users-updated', room.players);
   });
 
-  // --- 2. RELAIS WEBRTC (SIGNALING) ---
-  // C'est ici que les navigateurs s'échangent les infos pour se connecter en P2P.
-  // Si ces logs n'apparaissent pas, le Netplay ne marchera jamais.
-
-  socket.on('offer', (data) => {
-    // Log pour debug
-    console.log(`[SIG] OFFER de ${socket.id} -> Room ${socket.roomId}`);
-    if (socket.roomId) {
-      socket.to(socket.roomId).emit('offer', data);
-    }
-  });
-
-  socket.on('answer', (data) => {
-    console.log(`[SIG] ANSWER de ${socket.id} -> Room ${socket.roomId}`);
-    if (socket.roomId) {
-      socket.to(socket.roomId).emit('answer', data);
-    }
-  });
-
-  socket.on('candidate', (data) => {
-    // Les candidates sont nombreux, on log juste un petit point ou rien
-    // console.log(`[SIG] ICE Candidate de ${socket.id}`);
-    if (socket.roomId) {
-      socket.to(socket.roomId).emit('candidate', data);
-    }
-  });
-
-  // --- 3. RELAIS DATA (INPUTS) ---
-  // Fallback : Si le P2P (WebRTC) échoue, EmulatorJS essaie de passer les inputs par le serveur.
+  // --- RELAIS DES DONNÉES DE JEU ---
   socket.on('data-message', (data) => {
-    if (socket.roomId) {
-      // Relayer à tout le monde SAUF l'envoyeur
-      socket.to(socket.roomId).emit('data-message', data);
-    }
+    const sid = socket.data.sid;
+    if (sid) socket.to(sid).emit('data-message', data);
   });
 
-  // --- 4. DÉCONNEXION ---
+  // --- DÉCONNEXION ---
   socket.on('disconnect', () => {
-    const roomId = socket.roomId;
+    const sid = socket.data.sid;
+    const userid = socket.data.userid;
+    if (!sid || !rooms[sid]) return;
 
-    // Si le socket avait rejoint une room
-    if (roomId && rooms[roomId]) {
-      console.log(`[DISC] ${socket.id} a quitté la room ${roomId}`);
+    delete rooms[sid].players[userid];
+    socket.leave(sid);
 
-      // Suppression propre de l'utilisateur
-      delete rooms[roomId][socket.id];
-
-      // On sort du canal Socket.IO
-      socket.leave(roomId);
-
-      // On vérifie s'il reste du monde
-      const remainingPlayers = Object.keys(rooms[roomId]).length;
-
-      if (remainingPlayers > 0) {
-        // S'il reste des gens, on leur dit que la liste a changé
-        io.to(roomId).emit('users-updated', rooms[roomId]);
-        io.to(roomId).emit('user-disconnected', socket.id);
-      } else {
-        // Si la room est vide, on supprime l'objet room pour libérer la RAM
-        console.log(`[CLEAN] Room ${roomId} vide. Suppression.`);
-        delete rooms[roomId];
-      }
+    if (playerCount(rooms[sid]) > 0) {
+      io.to(sid).emit('users-updated', rooms[sid].players);
+      console.log(`[LEAVE] ${userid} a quitté ${sid}`);
     } else {
-      console.log(`[DISC] Socket ${socket.id} déconnecté (Sans Room)`);
+      delete rooms[sid];
+      console.log(`[CLEAN] Room ${sid} vide, supprimée.`);
     }
   });
 });
 
-// Écoute sur 0.0.0.0 pour être accessible depuis les autres machines du LAN
 httpServer.listen(PORT, '0.0.0.0', () => {
   const lan = getLanAddresses();
   console.log('==================================================');
@@ -206,7 +162,7 @@ httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`  Local   : http://localhost:${PORT}`);
   lan.forEach((ip) => console.log(`  Réseau  : http://${ip}:${PORT}   <-- à partager avec vos amis`));
   console.log('--------------------------------------------------');
-  console.log('  Astuce : autorisez le port dans le pare-feu Windows.');
+  console.log('  Autorisez le port dans le pare-feu Windows.');
   console.log('  Les joueurs doivent être sur le même réseau LAN/Wi-Fi.');
   console.log('==================================================');
 });

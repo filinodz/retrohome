@@ -221,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $console) { // Vérifie que $consol
     
     <link rel="stylesheet" href="../public/vendor/fonts/fonts.css">
     <link rel="stylesheet" href="../public/css/style.css">
-    <link rel="stylesheet" href="public/css/admin_style.css">
+    <link rel="stylesheet" href="public/css/admin_style.css?v=<?= @filemtime(__DIR__ . "/public/css/admin_style.css") ?>">
 </head>
 <body class="bg-background text-text-primary font-body">
 

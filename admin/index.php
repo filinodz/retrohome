@@ -65,7 +65,7 @@ $consoles = $stmtConsoles->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="../public/vendor/fontawesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../public/vendor/fonts/fonts.css">
-    <link rel="stylesheet" href="public/css/admin_style.css">
+    <link rel="stylesheet" href="public/css/admin_style.css?v=<?= @filemtime(__DIR__ . "/public/css/admin_style.css") ?>">
     <style>
         .animate-fade-in { animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

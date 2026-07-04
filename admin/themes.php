@@ -37,7 +37,7 @@ $themes = $themeManager->listThemes();
     <link rel="icon" type="image/png" href="../public/img/logo_new.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="../public/vendor/fontawesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="public/css/admin_style.css">
+    <link rel="stylesheet" href="public/css/admin_style.css?v=<?= @filemtime(__DIR__ . "/public/css/admin_style.css") ?>">
 </head>
 <body>
     <div class="app-container">

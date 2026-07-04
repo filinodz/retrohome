@@ -664,7 +664,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'search') {
     <link rel="stylesheet" href="../public/vendor/fontawesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../public/vendor/animatecss/4.1.1/animate.min.css">
     <link rel="stylesheet" href="../public/vendor/fonts/fonts.css">
-    <link rel="stylesheet" href="public/css/admin_style.css">
+    <link rel="stylesheet" href="public/css/admin_style.css?v=<?= @filemtime(__DIR__ . "/public/css/admin_style.css") ?>">
     <style>
         .selection-grid {
             display: grid;
