@@ -1,0 +1,95 @@
+:root {
+    /* Modern Classic Colors - Matching Theme */
+    --primary: #FF6B35;
+    --secondary: #F7ECE1;
+    --accent: #2A9D8F;
+    --background: #1C1917;
+    --surface: #2C2624;
+    --text-primary: #F7ECE1;
+    --text-secondary: #B8A890;
+    --border-color: #3D3733;
+    --glow-color-primary: rgba(255, 107, 53, 0.4);
+    --glow-color-secondary: rgba(42, 157, 143, 0.4);
+    --font-pixel: 'Press Start 2P', cursive;
+    --font-body: 'Cairo', sans-serif;
+    --glass-bg: rgba(44, 38, 36, 0.7);
+    --glass-border: rgba(247, 236, 225, 0.1);
+}
+
+/* --- Styles pour le Logo Header --- */
+#header-logo {
+    cursor: pointer;
+    width: 100px !important;
+    height: 100px !important;
+    filter: drop-shadow(0 0 10px var(--glow-color-primary)) drop-shadow(0 0 25px rgba(255, 45, 85, 0.2));
+    animation: subtle-pulse-float 6s ease-in-out infinite alternate;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#header-logo:hover {
+    transform: scale(1.15) rotate(-3deg);
+    filter: drop-shadow(0 0 15px var(--primary)) drop-shadow(0 0 35px var(--glow-color-primary));
+}
+
+@keyframes subtle-pulse-float {
+    0% {
+        transform: translateY(0);
+        filter: drop-shadow(0 0 8px var(--glow-color-primary));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.6));
+    }
+
+    100% {
+        transform: translateY(-6px);
+        filter: drop-shadow(0 0 10px var(--glow-color-primary));
+    }
+}
+
+.animate__delay-100ms {
+    animation-delay: 0.1s;
+}
+
+.animate__delay-200ms {
+    animation-delay: 0.2s;
+}
+
+.animate__delay-300ms {
+    animation-delay: 0.3s;
+}
+
+.animate__delay-400ms {
+    animation-delay: 0.4s;
+}
+
+.animate__delay-500ms {
+    animation-delay: 0.5s;
+}
+
+.pixel-font {
+    font-family: var(--font-pixel);
+}
+
+/* --- Select Customization --- */
+.console-filter-wrapper {
+    position: relative;
+}
+
+.console-filter-wrapper::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    right: 1.25rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--primary);
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+#console-filter {
+    padding-right: 2.5rem !important;
+}

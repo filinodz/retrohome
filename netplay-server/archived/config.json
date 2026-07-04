@@ -1,0 +1,5 @@
+{
+    "password" : "admin123",
+    "port" : 3000,
+    "dev" : false
+}

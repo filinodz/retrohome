@@ -1,0 +1,207 @@
+/* Wrapper principal pour la section Notation */
+.game-rating-wrapper {
+    margin-top: 2rem;
+    /* Espace au-dessus */
+}
+
+/* Titre H2 (peut utiliser .section-title existant) */
+.game-rating-wrapper h2 {
+    font-size: 1.5rem;
+    /* Plus petit que les titres principaux */
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.2rem;
+    font-family: var(--font-body);
+    border-left: 3px solid var(--secondary);
+    /* Utiliser couleur secondaire */
+    padding-left: 0.8rem;
+}
+
+/* Conteneur pour la notation (remplace .game-rating-section) */
+.rating-box {
+    background: linear-gradient(145deg, rgba(var(--surface-rgb, 30 30 46), 0.6), rgba(var(--surface-rgb, 30 30 46), 0.9));
+    /* Utiliser RGB si possible pour opacité */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    /* Empiler sur mobile par défaut */
+    align-items: center;
+    gap: 1.5rem;
+    /* Espace entre moyenne et notation user */
+}
+
+/* Layout côte à côte sur écrans moyens et plus */
+@media (min-width: 640px) {
+
+    /* sm */
+    .rating-box {
+        flex-direction: row;
+        justify-content: space-around;
+        /* Espacer les éléments */
+        align-items: center;
+    }
+}
+
+/* Section Note Moyenne */
+.average-rating-display-v2 {
+    /* Nouvelle classe */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.average-rating-display-v2 .label {
+    /* "Note Moyenne" */
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.average-rating-display-v2 .rating-score {
+    /* "4.5/5" */
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
+}
+
+.average-rating-display-v2 .rating-score .out-of {
+    font-size: 0.7em;
+    /* Plus petit "/5" */
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.average-rating-display-v2 .stars-display {
+    /* Étoiles moyennes (non interactives) */
+    font-size: 1.1rem;
+    /* Taille réduite */
+    color: var(--star-full-color);
+    margin-bottom: 0.4rem;
+    line-height: 1;
+}
+
+.average-rating-display-v2 .stars-display .far {
+    color: var(--star-empty-color);
+}
+
+.average-rating-display-v2 .rating-count {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Séparateur vertical (optionnel, pour grands écrans) */
+.rating-separator {
+    display: none;
+    /* Caché par défaut */
+    width: 1px;
+    height: 80px;
+    /* Hauteur fixe */
+    background-color: var(--border-color);
+    opacity: 0.5;
+}
+
+@media (min-width: 640px) {
+
+    /* sm */
+    .rating-separator {
+        display: block;
+    }
+}
+
+
+/* Section Notation Utilisateur */
+.user-rating-interactive {
+    /* Nouvelle classe */
+    text-align: center;
+    width: 100%;
+    /* Prend la largeur dispo */
+}
+
+.user-rating-interactive .label {
+    /* "Votre Note" */
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+    /* Plus d'espace avant les étoiles */
+    display: block;
+}
+
+/* Styles pour les étoiles interactives (ajustement taille) */
+.user-rating-interactive .rating label {
+    font-size: 1.6rem;
+    /* Taille des étoiles réduite */
+    padding: 0 0.2em;
+    /* Espacement ajusté */
+    color: var(--star-empty-color);
+    /* Assurer couleur par défaut */
+}
+
+.user-rating-interactive .rating label:hover,
+.user-rating-interactive .rating label:hover~label {
+    color: var(--star-full-color);
+}
+
+.user-rating-interactive .rating input:checked~label {
+    color: var(--star-full-color);
+}
+
+/* Style pour le message "Connectez-vous" */
+.login-to-rate-link {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+}
+
+.login-to-rate-link a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-to-rate-link a:hover {
+    text-decoration: underline;
+}
+
+/* Assurez-vous que le CSS pour .rating et .sr-only existe toujours */
+.rating {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.rating label::before {
+    content: '\f005';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 400;
+}
+
+.rating label:hover::before,
+.rating label:hover~label::before {
+    font-weight: 900;
+}
+
+.rating input:checked~label::before {
+    font-weight: 900;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

@@ -1,0 +1,52 @@
+# ─── Secrets & configuration locale ───────────────────────────
+config.local.php
+config.php.bak
+
+# ─── Base de données (dumps personnels avec données/mots de passe) ─
+# On versionne uniquement sql/schema.sql (structure propre, sans secret).
+sql/retro.sql
+sql/retro_new.sql
+*.sqlite
+*.sqlite3
+
+# ─── Contenu sous copyright / lourd (à fournir par l'utilisateur) ─
+roms/*
+!roms/.gitkeep
+data/bios/*
+!data/bios/.gitkeep
+
+# ─── Médias générés par le scraping ───────────────────────────
+assets/covers/*
+!assets/covers/.gitkeep
+assets/previews/*
+!assets/previews/.gitkeep
+
+# ─── Dépendances Node (serveur netplay) ───────────────────────
+netplay-server/node_modules/
+node_modules/
+
+# ─── Fichiers temporaires / de développement ──────────────────
+_preview*.php
+admin/_preview.php
+admin/test_*
+admin/*-bak.php
+admin/*.bak
+*-bak.php
+scratchpad/
+*.log
+
+# Scripts/notes ponctuels de développement (non nécessaires en production)
+patch_api.php
+migrate_settings.php
+schema_output.txt
+FIX_INSTRUCTIONS.txt
+FORCE_BOTTOM_BUTTONS.css
+public/js/*.txt
+
+# ─── Outils / éditeurs ────────────────────────────────────────
+.claude/
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,152 @@
+/* Google Fonts Localized */
+
+/* Outfit */
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url(Outfit-300.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(Outfit-400.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url(Outfit-600.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url(Outfit-800.ttf) format('truetype');
+}
+
+/* Press Start 2P */
+@font-face {
+    font-family: 'Press Start 2P';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(PressStart2P-400.ttf) format('truetype');
+}
+
+/* Orbitron */
+@font-face {
+    font-family: 'Orbitron';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(Orbitron-400.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(Orbitron-700.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url(Orbitron-900.ttf) format('truetype');
+}
+
+/* Rajdhani */
+@font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(Rajdhani-500.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(Rajdhani-700.ttf) format('truetype');
+}
+
+/* Inter */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(Inter-400.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(Inter-500.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(Inter-700.ttf) format('truetype');
+}
+
+/* Roboto Condensed */
+@font-face {
+    font-family: 'Roboto Condensed';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(RobotoCondensed-400.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Roboto Condensed';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(RobotoCondensed-700.ttf) format('truetype');
+}
+
+/* Roboto Mono */
+@font-face {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url(RobotoMono-300.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(RobotoMono-400.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(RobotoMono-700.ttf) format('truetype');
+}

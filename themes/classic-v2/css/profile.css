@@ -1,0 +1,717 @@
+/* ============================================================
+   RETROGAME CMS - PROFILE.CSS
+   Ultra-Modern Profile Page Design
+   ============================================================ */
+
+/* === Profile Container === */
+.profile-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* === Profile Header === */
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    position: relative;
+}
+
+.profile-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    border-radius: var(--radius-full);
+    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.5);
+}
+
+.profile-header .page-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-pixel);
+    text-shadow: 
+        0 0 20px rgba(var(--primary-rgb), 0.5),
+        0 0 40px rgba(var(--primary-rgb), 0.3),
+        2px 2px 0 var(--accent);
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    0% { text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.5), 0 0 40px rgba(var(--primary-rgb), 0.3), 2px 2px 0 var(--accent); }
+    100% { text-shadow: 0 0 30px rgba(var(--primary-rgb), 0.7), 0 0 60px rgba(var(--primary-rgb), 0.4), 2px 2px 0 var(--accent); }
+}
+
+/* === Back Home Link === */
+.back-home-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+}
+
+.back-home-link:hover {
+    color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.1);
+    border-color: rgba(var(--primary-rgb), 0.3);
+    transform: translateX(-5px);
+    box-shadow: var(--shadow-glow-primary);
+}
+
+.back-home-link i {
+    transition: transform var(--transition-base);
+}
+
+.back-home-link:hover i {
+    transform: translateX(-3px);
+}
+
+/* === Profile Menu Button === */
+.profile-menu-button-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* === Profile Section === */
+.profile-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border-radius: var(--radius-lg);
+    padding: 2rem 2.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--glass-border);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.profile-section:hover::before {
+    opacity: 1;
+}
+
+.profile-section h3.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: var(--font-header);
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    text-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
+}
+
+.profile-section p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.profile-section p strong {
+    color: var(--text-primary);
+    font-weight: 600;
+    min-width: 120px;
+}
+
+.profile-section p span {
+    color: var(--text-primary);
+}
+
+/* === Favorites Grid === */
+#profile-favorites {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    min-height: 100px;
+}
+
+.favorite-game-card {
+    background: rgba(var(--surface-rgb), 0.8);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.favorite-game-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-primary);
+    border-color: rgba(var(--primary-rgb), 0.3);
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+.favorite-game-card .cover-wrapper {
+    flex-shrink: 0;
+    margin-right: 1.25rem;
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.favorite-game-card .cover-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+}
+
+.favorite-game-card:hover .cover-wrapper img {
+    transform: scale(1.1);
+}
+
+.favorite-game-card .game-info {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.favorite-game-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: var(--font-header);
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color var(--transition-base);
+}
+
+.favorite-game-card:hover h4 {
+    color: var(--primary);
+}
+
+.favorite-game-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.favorite-game-card p::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--primary);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--primary);
+}
+
+.no-favorite-message {
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 3rem 1rem;
+    grid-column: 1 / -1;
+    background: rgba(var(--surface-rgb), 0.5);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--border-color);
+}
+
+/* === Collections Section === */
+.collections-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.collections-header .section-title {
+    border-bottom: none;
+    margin-bottom: 0;
+    font-size: 1.8rem;
+}
+
+#create-collection-btn {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: var(--font-header);
+    transition: all var(--transition-base);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+#create-collection-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+#create-collection-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(var(--primary-rgb), 0.5);
+}
+
+#create-collection-btn:hover::before {
+    left: 100%;
+}
+
+/* === Collections Grid === */
+#collections-container.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.75rem;
+}
+
+.collection-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--glass-border);
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.collection-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(var(--primary-rgb), 0) 0%, rgba(var(--primary-rgb), 0.03) 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    pointer-events: none;
+}
+
+.collection-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-primary);
+    border-color: rgba(var(--primary-rgb), 0.3);
+}
+
+.collection-card:hover::before {
+    opacity: 1;
+}
+
+.collection-card h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-family: var(--font-header);
+    color: var(--primary);
+    margin-bottom: 0.6rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 2rem;
+}
+
+.collection-card p.collection-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-height: 2.8em;
+    flex-grow: 1;
+    line-height: 1.5;
+}
+
+/* === Collection Games List === */
+.collection-games-list {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    max-height: 160px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--primary-rgb), 0.3) var(--background);
+}
+
+.collection-games-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.collection-games-list::-webkit-scrollbar-track {
+    background: var(--background);
+    border-radius: 3px;
+}
+
+.collection-games-list::-webkit-scrollbar-thumb {
+    background: rgba(var(--primary-rgb), 0.3);
+    border-radius: 3px;
+}
+
+.collection-games-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--primary-rgb), 0.5);
+}
+
+.collection-games-list p.no-games-message {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 0.75rem 0;
+}
+
+.collection-game {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding: 0.4rem;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-base);
+}
+
+.collection-game:last-child {
+    margin-bottom: 0;
+}
+
+.collection-game:hover {
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+.collection-game img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    margin-right: 0.85rem;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.collection-game span {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* === Delete Collection Button === */
+.delete-collection-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 64, 129, 0.5);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    padding: 0.5rem;
+    line-height: 1;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border-radius: var(--radius-sm);
+    z-index: 10;
+}
+
+.delete-collection-btn:hover {
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.1);
+    transform: scale(1.15) rotate(10deg);
+}
+
+/* === Collection Modal === */
+#collection-modal {
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#collection-modal .modal-content {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    padding: 2.5rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg), 0 0 60px rgba(var(--primary-rgb), 0.1);
+    border: 1px solid var(--glass-border);
+    width: 90%;
+    max-width: 520px;
+    animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#collection-modal h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: var(--font-header);
+    color: var(--primary);
+    margin-bottom: 2rem;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+}
+
+#collection-modal input[type="text"],
+#collection-modal textarea {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    background: rgba(var(--background-rgb), 0.6);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: var(--font-body);
+    margin-bottom: 1.25rem;
+    outline: none;
+    transition: all var(--transition-base);
+}
+
+#collection-modal input[type="text"]:focus,
+#collection-modal textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15), 0 0 20px rgba(var(--primary-rgb), 0.1);
+}
+
+#collection-modal textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+#collection-modal .form-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+/* === Form Buttons === */
+.form-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.8rem 1.75rem;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: var(--font-header);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.form-button.submit-button {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
+}
+
+.form-button.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(var(--primary-rgb), 0.5);
+}
+
+.form-button.cancel-button {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+
+.form-button.cancel-button:hover {
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    border-color: rgba(var(--primary-rgb), 0.3);
+}
+
+/* === Responsive === */
+@media (max-width: 767px) {
+    .profile-container {
+        padding: 1.25rem;
+    }
+
+    .profile-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .profile-header .page-title {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    .back-home-link {
+        position: relative;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .profile-menu-button-container {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .main-profile-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .profile-section {
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-section h3.section-title {
+        font-size: 1.3rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .profile-section p {
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+
+    .profile-section p strong {
+        min-width: unset;
+    }
+
+    #profile-favorites {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .favorite-game-card {
+        padding: 1rem;
+    }
+
+    .favorite-game-card .cover-wrapper {
+        width: 56px;
+        height: 56px;
+        margin-right: 1rem;
+    }
+
+    .favorite-game-card h4 {
+        font-size: 1rem;
+    }
+
+    .favorite-game-card p {
+        font-size: 0.85rem;
+    }
+
+    .collections-header {
+        margin-bottom: 1.25rem;
+    }
+
+    .collections-header .section-title {
+        font-size: 1.5rem;
+    }
+
+    #create-collection-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    #collections-container.collection-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .collection-card {
+        padding: 1.25rem;
+    }
+
+    .collection-card h3 {
+        font-size: 1.15rem;
+    }
+
+    .collection-card p.collection-description {
+        font-size: 0.9rem;
+        min-height: 2.6em;
+    }
+
+    .delete-collection-btn {
+        top: 0.75rem;
+        right: 0.75rem;
+        font-size: 1rem;
+    }
+
+    #collection-modal .modal-content {
+        padding: 1.75rem;
+        width: 95%;
+    }
+
+    #collection-modal h3 {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #collection-modal .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

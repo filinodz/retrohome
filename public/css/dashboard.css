@@ -1,0 +1,103 @@
+   :root {
+            --primary: #64ffda;
+            --secondary: #f4ff81;
+            --accent: #ff4081;
+            --background: #121212;
+            --surface: #1e1e1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b3b3b3;
+            --border-color: #333333;
+            --glow-color-primary: rgba(100, 255, 218, 0.4); /* Basé sur --primary */
+            --glow-color-secondary: rgba(244, 255, 129, 0.4); /* Basé sur --secondary */
+            --font-pixel: 'Press Start 2P', cursive; /* Assurez-vous que cette police est chargée */
+            --font-body: 'Inter', sans-serif; /* Assurez-vous que cette police est chargée */
+        }
+
+        /* --- Styles pour le Logo Header --- */
+        .logo-container {
+            /* Utile pour positionnement relatif si besoin futur */
+        }
+
+        #header-logo {
+            /* Taille initiale gérée par Tailwind (h-20 md:h-24 lg:h-28) */
+            cursor: pointer;
+            /* Halo lumineux initial subtil */
+            filter: drop-shadow(0 0 5px var(--glow-color-primary, rgba(100, 255, 218, 0.4)))
+                    drop-shadow(0 0 15px var(--glow-color-primary, rgba(100, 255, 218, 0.2)));
+            /* Animation ambiante */
+            animation: subtle-pulse-float 6s ease-in-out infinite alternate;
+            /* Transition gérée par Tailwind (transition-all duration-300 ease-out) */
+        }
+
+        /* Effet au survol */
+        #header-logo:hover {
+            transform: scale(1.08) rotate(-2deg);
+            /* Halo lumineux intensifié */
+            filter: drop-shadow(0 0 10px var(--primary, #64ffda))
+                    drop-shadow(0 0 25px var(--glow-color-primary, rgba(100, 255, 218, 0.6)))
+                    drop-shadow(0 0 35px var(--glow-color-secondary, rgba(244, 255, 129, 0.3)));
+        }
+
+        /* Animation ambiante subtile */
+        @keyframes subtle-pulse-float {
+            0% {
+                transform: translateY(0);
+                filter: drop-shadow(0 0 5px var(--glow-color-primary, rgba(100, 255, 218, 0.4)))
+                        drop-shadow(0 0 15px var(--glow-color-primary, rgba(100, 255, 218, 0.2)));
+            }
+            50% {
+                filter: drop-shadow(0 0 6px var(--glow-color-primary, rgba(100, 255, 218, 0.5)))
+                        drop-shadow(0 0 18px var(--glow-color-primary, rgba(100, 255, 218, 0.25)));
+            }
+            100% {
+                transform: translateY(-4px);
+                filter: drop-shadow(0 0 8px var(--glow-color-primary, rgba(100, 255, 218, 0.6)))
+                        drop-shadow(0 0 22px var(--glow-color-primary, rgba(100, 255, 218, 0.3)));
+            }
+        }
+
+        /* Délais pour animations décalées */
+        .animate__delay-100ms { animation-delay: 0.1s; }
+        .animate__delay-200ms { animation-delay: 0.2s; }
+        .animate__delay-300ms { animation-delay: 0.3s; }
+        .animate__delay-400ms { animation-delay: 0.4s; }
+        .animate__delay-500ms { animation-delay: 0.5s; }
+
+         /* Assurez-vous que les styles pour .pixel-font sont bien définis */
+         .pixel-font {
+             font-family: var(--font-pixel, 'Press Start 2P', cursive); /* Fallback */
+         }
+        :root { /* ... tes variables ... */ }
+        .logo-container { /* ... */ }
+        #header-logo { /* ... */ }
+        #header-logo:hover { /* ... */ }
+        @keyframes subtle-pulse-float { /* ... */ }
+        .animate__delay-100ms { animation-delay: 0.1s; }
+        .animate__delay-200ms { animation-delay: 0.2s; }
+        /* ... autres délais ... */
+        .pixel-font {
+             font-family: var(--font-pixel, 'Press Start 2P', cursive); /* Fallback */
+         }
+
+        /* --- Styles pour la flèche du select (si besoin) --- */
+        .console-filter-wrapper {
+            position: relative; /* Nécessaire pour positionner la flèche */
+        }
+        /* Masque la flèche par défaut du navigateur sur certains navigateurs */
+        #console-filter {
+           /* appearance: none; - Déjà présent via Tailwind */
+           /* background-image: none; */ /* Peut être nécessaire sur certains navigateurs */
+        }
+        /* Ajoute une flèche personnalisée */
+        .console-filter-wrapper::after {
+            content: '\f078'; /* Code Font Awesome pour chevron-down */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900; /* Solid style */
+            position: absolute;
+            top: 50%;
+            right: 1rem; /* Ajuste la position (correspond à pr-4 sur le select + un peu d'espace) */
+            transform: translateY(-50%);
+            pointer-events: none; /* Pour que le clic passe au select */
+            color: var(--text-secondary, #b3b3b3);
+            font-size: 0.8rem; /* Ajuste la taille de la flèche */
+        }

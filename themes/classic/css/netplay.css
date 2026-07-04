@@ -1,0 +1,219 @@
+/* NetPlay Modal Styles */
+.netplay-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.netplay-modal-content {
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.netplay-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.netplay-header h2 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.netplay-close {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.3s ease;
+}
+
+.netplay-close:hover {
+    color: var(--primary);
+}
+
+.netplay-body {
+    padding: 20px;
+}
+
+.netplay-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.netplay-tab {
+    flex: 1;
+    padding: 12px;
+    background: var(--background);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.netplay-tab:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.netplay-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-color: var(--primary);
+    color: var(--secondary);
+}
+
+.netplay-tab-content {
+    display: none;
+}
+
+.netplay-tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.netplay-info {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.netplay-input {
+    width: 100%;
+    padding: 12px;
+    background: var(--background);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.netplay-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.netplay-btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.netplay-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(42, 157, 143, 0.4);
+}
+
+.room-code {
+    margin-top: 20px;
+    padding: 15px;
+    background: var(--background);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.room-code p {
+    margin: 0 0 10px 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.code-box {
+    background: var(--surface);
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+    font-family: var(--font-pixel);
+}
+
+.room-code small {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.netplay-status {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    display: none;
+}
+
+.netplay-status:not(:empty) {
+    display: block;
+}
+
+.netplay-status.status-info {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.netplay-status.status-success {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+}
+
+.netplay-status.status-error {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.netplay-status.status-warning {
+    background: rgba(241, 196, 15, 0.2);
+    color: #f1c40f;
+    border: 1px solid #f1c40f;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

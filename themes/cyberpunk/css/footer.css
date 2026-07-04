@@ -1,0 +1,74 @@
+/* public/css/footer.css */
+.main-footer {
+    position: relative;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+    width: 100%;
+    margin-top: auto;
+}
+
+.footer-grid {
+    position: relative;
+}
+
+.footer-grid::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 50px;
+    height: 1px;
+    background: var(--primary);
+}
+
+.footer-branding p {
+    font-family: 'Inter', sans-serif;
+}
+
+.footer-links a {
+    display: block;
+    width: fit-content;
+}
+
+.footer-links a:hover {
+    padding-left: 5px;
+}
+
+.footer-bottom {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Animations pulse for the heart */
+@keyframes heart-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.main-footer .fa-heart {
+    animation: heart-pulse 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.4));
+}
+
+/* Specific theme overrides */
+.theme-cyberpunk .main-footer {
+    border-top: 2px solid var(--primary);
+    background: rgba(5, 5, 16, 0.95);
+}
+
+.theme-cyberpunk .footer-grid::before {
+    background: var(--secondary);
+    width: 100%;
+    opacity: 0.1;
+}
+
+.theme-modern .main-footer {
+    background: #000;
+}
