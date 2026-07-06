@@ -144,7 +144,7 @@
     <!-- Inclusion des scripts -->
     <script>const SITE_URL = "<?= SITE_URL ?>";</script>
     <script src="<?= SITE_URL ?>/public/js/video-preview.js"></script>
-    <script src="<?= SITE_URL ?>/public/js/script.js"></script>
+    <script src="<?= SITE_URL ?>/public/js/script.js?v=<?= @filemtime(BASE_PATH . '/public/js/script.js') ?>"></script>
     <script>
         // --- Gestion Menu déroulant profil ---
         const menuButton = document.getElementById('menu-button');

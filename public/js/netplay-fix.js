@@ -52,6 +52,13 @@
       return (i < 0) ? (np.owner ? 0 : 1) : i;
     }
 
+    console.log('[RetroHome] netplay-fix v3 (synchro binaire) actif');
+
+    function toast(msg) {
+      try { em.displayMessage(msg, 4000); } catch (e) {}
+      console.log('[RetroHome NetPlay] ' + msg);
+    }
+
     // Envoi de l'état du jeu en BINAIRE (socket.io le transmet nativement,
     // sans l'exploser en JSON — indispensable pour les states de 100 Ko+).
     function sendState() {
@@ -60,9 +67,10 @@
         // getState() peut retourner une chaîne d'erreur : on ne l'envoie pas.
         if (st && st instanceof Uint8Array && st.length > 0) {
           np.sendMessage({ rh_state: st });
+          console.log('[RetroHome NetPlay] état envoyé (' + (st.length / 1024).toFixed(0) + ' Ko)');
           return true;
         }
-      } catch (e) {}
+      } catch (e) { console.warn('[RetroHome NetPlay] getState indisponible:', e.message); }
       return false;
     }
 
@@ -89,12 +97,18 @@
           var u8 = (buf instanceof Uint8Array) ? buf : new Uint8Array(buf);
           if (u8.length > 0) {
             em.gameManager.loadState(u8);
+            var first = !np.__rhSynced;
             np.__rhSynced = true;
             try { em.play(true); } catch (e) {}
+            if (first) toast('NETPLAY : synchronisé avec l\'hôte (' + (u8.length / 1024).toFixed(0) + ' Ko)');
+            else console.log('[RetroHome NetPlay] resync (' + (u8.length / 1024).toFixed(0) + ' Ko)');
           }
         } catch (e) { console.warn('[RetroHome] loadState:', e); }
       }
-      if (data.rh_hello && np.owner) { sendState(); }
+      if (data.rh_hello && np.owner) {
+        console.log('[RetroHome NetPlay] demande de synchro reçue');
+        if (!sendState()) toast('NETPLAY : jeu pas encore prêt, synchro dès que possible…');
+      }
     };
 
     // 3) On neutralise l'ancienne synchro lockstep (cassée)
@@ -105,7 +119,7 @@
         if (!em.isNetplay) return;
         if (np.owner) {
           frame++;
-          if (frame % 600 === 0) sendState(); // resynchronisation ~toutes les 10 s
+          if (frame % 300 === 0) sendState(); // resynchronisation ~toutes les 5 s
         }
       };
     }
@@ -118,10 +132,12 @@
       origRoom.call(np, isOwner, roomName, password, roomId);
       if (!isOwner) {
         np.__rhSynced = false;
+        toast('NETPLAY : connexion à la partie de l\'hôte…');
         var tries = 0;
         var iv = setInterval(function () {
           tries++;
-          if (np.__rhSynced || !em.isNetplay || tries > 20) { clearInterval(iv); return; }
+          if (np.__rhSynced || !em.isNetplay || tries > 24) { clearInterval(iv); return; }
+          if (tries === 12) toast('NETPLAY : toujours en attente de l\'hôte… (vérifiez que son jeu est lancé)');
           try { np.sendMessage({ rh_hello: true }); } catch (e) {}
         }, 2500);
         try { np.sendMessage({ rh_hello: true }); } catch (e) {}

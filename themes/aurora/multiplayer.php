@@ -72,7 +72,7 @@
         window.RETROHOME_USER = "<?= htmlspecialchars($_SESSION['username'] ?? '', ENT_QUOTES) ?>";
     </script>
     <script src="<?= SITE_URL ?>/public/vendor/socketio/socket.io.min.js"></script>
-    <script src="<?= SITE_URL ?>/public/js/netplay-fix.js"></script>
+    <script src="<?= SITE_URL ?>/public/js/netplay-fix.js?v=<?= @filemtime(BASE_PATH . '/public/js/netplay-fix.js') ?>"></script>
     <script src="<?= SITE_URL ?>/public/js/emulator.js?v=<?= @filemtime(BASE_PATH.'/public/js/emulator.js') ?>"></script>
     <script src="<?= SITE_URL ?>/public/js/multiplayer.js?v=<?= @filemtime(BASE_PATH.'/public/js/multiplayer.js') ?>"></script>
 </body>

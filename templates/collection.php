@@ -83,7 +83,7 @@
       const collectionId = <?= json_encode($collectionId) ?>;
       const collectionName = <?= json_encode($collectionInfo['name'] ?? 'Collection') ?>;
   </script>
-  <script src="<?= SITE_URL ?>/public/js/collection.js"></script>
+  <script src="<?= SITE_URL ?>/public/js/collection.js?v=<?= @filemtime(BASE_PATH . '/public/js/collection.js') ?>"></script>
     <script>
         // Inline scripts for modal animations
     </script>

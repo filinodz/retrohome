@@ -44,12 +44,13 @@ try {
     }
 
     // Pré-remplir les variables pour le formulaire
-    $title = $game['title'];
+    // (?? '' : les champs peuvent être NULL en base -> htmlspecialchars(null) est déprécié en PHP 8.1+)
+    $title = $game['title'] ?? '';
     $console_id = $game['console_id'];
-    $description = $game['description'];
-    $year = $game['year'];
-    $publisher = $game['publisher'];
-    $sort_order = $game['sort_order']; // Récupérer sort_order
+    $description = $game['description'] ?? '';
+    $year = $game['year'] ?? '';
+    $publisher = $game['publisher'] ?? '';
+    $sort_order = $game['sort_order'] ?? 0; // Récupérer sort_order
 
     // Récupère la liste des consoles
     $consoles = $db->query("SELECT id, name FROM consoles ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
@@ -339,7 +340,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <header class="admin-header-internal mb-8">
              <a href="index.php" class="back-link-header" title="<?= __('back_caps') ?>">
                 <i class="fas fa-arrow-left mr-2"></i>
-                 <h1 class="form-title inline"><?= __('admin_edit_game_title') ?> : <?= htmlspecialchars($game['title']) ?></h1>
+                 <h1 class="form-title inline"><?= __('admin_edit_game_title') ?> : <?= htmlspecialchars($game['title'] ?? '') ?></h1>
             </a>
         </header>
 
@@ -414,7 +415,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="file" id="cover" name="cover" accept="image/jpeg,image/png,image/gif,image/webp">
                              <?php if (!empty($game['cover'])): ?>
                                 <p class="current-file-info"><i class="fas fa-image"></i><?= __('admin_current_file') ?></p>
-                                <img src="../<?= htmlspecialchars($game['cover']) ?>" alt="Couverture actuelle" class="current-preview-image">
+                                <img src="../<?= htmlspecialchars($game['cover'] ?? '') ?>" alt="Couverture actuelle" class="current-preview-image">
                             <?php else: ?>
                                 <p class="current-file-info text-red-400"><i class="fas fa-exclamation-triangle"></i><?= __('admin_no_current_file') ?></p>
                             <?php endif; ?>

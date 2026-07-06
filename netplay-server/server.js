@@ -62,7 +62,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (url.pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', rooms: Object.keys(rooms).length, uptime: process.uptime() }));
+    res.end(JSON.stringify({ status: 'ok', version: 2, rooms: Object.keys(rooms).length, uptime: process.uptime() }));
     return;
   }
 
@@ -135,7 +135,15 @@ io.on('connection', (socket) => {
   // --- RELAIS DES DONNÉES DE JEU ---
   socket.on('data-message', (data) => {
     const sid = socket.data.sid;
-    if (sid) socket.to(sid).emit('data-message', data);
+    if (!sid) return;
+    // Log des synchros d'état (diagnostic) — les inputs restent silencieux.
+    if (data && data.rh_state) {
+      const len = data.rh_state.byteLength || data.rh_state.length || 0;
+      console.log(`[SYNC] État relayé (${(len / 1024).toFixed(0)} Ko) -> room ${sid}`);
+    } else if (data && data.rh_hello) {
+      console.log(`[SYNC] Demande d'état -> room ${sid}`);
+    }
+    socket.to(sid).emit('data-message', data);
   });
 
   // --- DÉCONNEXION ---

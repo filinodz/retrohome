@@ -238,8 +238,8 @@
     <script src="<?= SITE_URL ?>/public/vendor/socketio/socket.io.min.js"></script>
     <script>window.io || document.write('<script src="https:\/\/cdn.socket.io\/4.7.5\/socket.io.min.js"><\/script>');</script>
 
-    <script src="<?= SITE_URL ?>/public/js/netplay-fix.js"></script>
-    <script src="<?= SITE_URL ?>/public/js/script.js"></script>
+    <script src="<?= SITE_URL ?>/public/js/netplay-fix.js?v=<?= @filemtime(BASE_PATH . '/public/js/netplay-fix.js') ?>"></script>
+    <script src="<?= SITE_URL ?>/public/js/script.js?v=<?= @filemtime(BASE_PATH . '/public/js/script.js') ?>"></script>
      <script>
         document.addEventListener('DOMContentLoaded', () => {
             const menuButton = document.getElementById('menu-button');
