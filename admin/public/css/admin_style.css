@@ -835,3 +835,146 @@ input[type="submit"].form-button {
     border-color: rgba(239, 68, 68, 0.35);
 }
 .form-button.delete-button:hover { background: #ef4444; color: #fff; box-shadow: 0 6px 20px rgba(239,68,68,0.4); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   AURORA ADMIN POLISH — fond, scraping (progress + logs), sélection,
+   badges manquants, tables, scrollbars. Bloc additif chargé en dernier.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Fond "aurora" discret, cohérent avec le front */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 50% 40% at 10% 5%, rgba(34, 211, 238, 0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 45% at 90% 10%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 50% at 80% 95%, rgba(244, 114, 182, 0.07) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+.app-container { position: relative; z-index: 1; }
+
+/* Barre de navigation : liseré dégradé subtil */
+.app-container .nav-bar {
+    border-radius: 20px;
+    background:
+        linear-gradient(var(--glass), var(--glass)) padding-box,
+        linear-gradient(120deg, rgba(34,211,238,.35), rgba(139,92,246,.35), rgba(244,114,182,.3)) border-box;
+    border: 1px solid transparent;
+}
+
+/* ── SCRAPING : barre de progression aurora animée ── */
+.app-container .progress-wrapper {
+    position: relative;
+    height: 34px;
+    background: rgba(5, 7, 15, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 28px;
+}
+.app-container .progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(120deg, #22d3ee, #8b5cf6, #f472b6, #22d3ee);
+    background-size: 300% 100%;
+    animation: rhProgressFlow 3s linear infinite;
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.5);
+    transition: width .45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes rhProgressFlow { 0% { background-position: 0% 0; } 100% { background-position: 300% 0; } }
+.app-container .progress-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+    z-index: 2;
+    letter-spacing: .5px;
+}
+
+/* ── SCRAPING : console de logs façon terminal ── */
+.app-container .sse-log-container,
+#sse-log-container {
+    background: rgba(4, 6, 12, 0.75) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 16px !important;
+    padding: 18px 20px !important;
+    max-height: 340px;
+    overflow-y: auto;
+    font-family: 'Roboto Mono', 'Consolas', monospace;
+    font-size: .8rem;
+    line-height: 1.7;
+    box-shadow: inset 0 2px 18px rgba(0, 0, 0, 0.45);
+}
+.app-container .sse-log-container li,
+#sse-log li {
+    padding: 3px 0 3px 16px;
+    border-left: 2px solid rgba(255, 255, 255, 0.08);
+    margin: 2px 0;
+    color: var(--text-secondary);
+    animation: rhLogIn .25s ease;
+}
+@keyframes rhLogIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+.app-container .sse-log-container li.success, #sse-log li.success { color: #34d399; border-left-color: #34d399; }
+.app-container .sse-log-container li.error,   #sse-log li.error   { color: #f87171; border-left-color: #f87171; }
+.app-container .sse-log-container li.warning, #sse-log li.warning { color: #fbbf24; border-left-color: #fbbf24; }
+.app-container .sse-log-container li.info,    #sse-log li.info    { color: #38bdf8; border-left-color: #38bdf8; }
+
+/* ── SCRAPING : cartes de sélection du bon jeu ── */
+.app-container .selection-card {
+    border-radius: 16px;
+    transition: transform .22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow .22s, border-color .22s;
+}
+.app-container .selection-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--secondary) !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5), 0 0 24px rgba(34, 211, 238, 0.25);
+}
+.app-container .selection-card.selected {
+    border-color: transparent !important;
+    background:
+        linear-gradient(var(--glass), var(--glass)) padding-box,
+        linear-gradient(120deg, #22d3ee, #8b5cf6, #f472b6) border-box !important;
+    border: 2px solid transparent !important;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.45);
+}
+
+/* Badge danger manquant + harmonisation */
+.badge-danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-weight: 800;
+    font-size: .7rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Tables : survol et zébrage doux */
+.app-container table tbody tr { transition: background .15s; }
+.app-container table tbody tr:hover { background: rgba(139, 92, 246, 0.07); }
+
+/* Sélecteur de fichier aurora */
+input[type="file"]::file-selector-button {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    color: #05121a !important;
+    border: none !important;
+    font-weight: 800 !important;
+}
+
+/* Scrollbars admin */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); }
+::-webkit-scrollbar-thumb { background: var(--glass-hover); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+::selection { background: rgba(139, 92, 246, 0.4); color: #fff; }

@@ -77,7 +77,10 @@ const httpServer = http.createServer((req, res) => {
 });
 
 const io = new Server(httpServer, {
-  cors: { origin: '*', methods: ['GET', 'POST'] }
+  cors: { origin: '*', methods: ['GET', 'POST'] },
+  // Les sauvegardes d'état (rh_state) sont envoyées en binaire et peuvent
+  // dépasser la limite par défaut de 1 Mo — on l'augmente largement (LAN).
+  maxHttpBufferSize: 1e8
 });
 
 io.on('connection', (socket) => {

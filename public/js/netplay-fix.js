@@ -51,11 +51,19 @@
       var i = np.getUserIndex(np.playerID);
       return (i < 0) ? (np.owner ? 0 : 1) : i;
     }
+
+    // Envoi de l'état du jeu en BINAIRE (socket.io le transmet nativement,
+    // sans l'exploser en JSON — indispensable pour les states de 100 Ko+).
     function sendState() {
       try {
-        var st = em.gameManager.getState();
-        if (st) np.sendMessage({ rh_state: Array.prototype.slice.call(st) });
+        var st = em.gameManager && em.gameManager.getState();
+        // getState() peut retourner une chaîne d'erreur : on ne l'envoie pas.
+        if (st && st instanceof Uint8Array && st.length > 0) {
+          np.sendMessage({ rh_state: st });
+          return true;
+        }
       } catch (e) {}
+      return false;
     }
 
     // 1) Input local -> appliqué immédiatement à MON port + diffusé
@@ -68,13 +76,23 @@
     };
 
     // 2) Réception
+    np.__rhSynced = false;
     np.dataMessage = function (data) {
       if (!data) return;
       if (data.rh_in) {
         try { em.gameManager.functions.simulateInput(data.rh_in[0], data.rh_in[1], data.rh_in[2]); } catch (e) {}
       }
       if (data.rh_state && !np.owner) {
-        try { em.gameManager.loadState(new Uint8Array(data.rh_state)); } catch (e) {}
+        try {
+          // Le binaire arrive en ArrayBuffer (navigateur) : on normalise.
+          var buf = data.rh_state;
+          var u8 = (buf instanceof Uint8Array) ? buf : new Uint8Array(buf);
+          if (u8.length > 0) {
+            em.gameManager.loadState(u8);
+            np.__rhSynced = true;
+            try { em.play(true); } catch (e) {}
+          }
+        } catch (e) { console.warn('[RetroHome] loadState:', e); }
       }
       if (data.rh_hello && np.owner) { sendState(); }
     };
@@ -87,16 +105,27 @@
         if (!em.isNetplay) return;
         if (np.owner) {
           frame++;
-          if (frame % 120 === 0) sendState(); // ~toutes les 2 s
+          if (frame % 600 === 0) sendState(); // resynchronisation ~toutes les 10 s
         }
       };
     }
 
     // 4) À l'entrée dans une room, l'invité réclame l'état de l'hôte
+    //    avec RÉESSAIS jusqu'à réception du premier state (le jeu de l'hôte
+    //    peut ne pas être prêt au moment du join).
     var origRoom = np.roomJoined;
     np.roomJoined = function (isOwner, roomName, password, roomId) {
       origRoom.call(np, isOwner, roomName, password, roomId);
-      if (!isOwner) { setTimeout(function () { try { np.sendMessage({ rh_hello: true }); } catch (e) {} }, 600); }
+      if (!isOwner) {
+        np.__rhSynced = false;
+        var tries = 0;
+        var iv = setInterval(function () {
+          tries++;
+          if (np.__rhSynced || !em.isNetplay || tries > 20) { clearInterval(iv); return; }
+          try { np.sendMessage({ rh_hello: true }); } catch (e) {}
+        }, 2500);
+        try { np.sendMessage({ rh_hello: true }); } catch (e) {}
+      }
     };
   }
 
