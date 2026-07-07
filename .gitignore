@@ -50,3 +50,6 @@ public/js/*.txt
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Serveur netplay précompilé (155 Mo — remplacé par netplay-server/, dépasse la limite GitHub)
+EmulatorJS.Netplay.Server-windows-0.4.3/
