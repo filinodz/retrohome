@@ -33,13 +33,22 @@
 
 ## 📸 Aperçu
 
-> Le thème **Aurora** : glassmorphism, dégradés « aurore », typographie moderne.
+Le thème **Aurora** (par défaut) : glassmorphism, dégradés « aurore », typographie moderne.
 
-<p align="center">
-  <img src="docs/banner.svg" alt="Aperçu RetroHome" width="80%">
-</p>
+### 🏠 Bibliothèque de jeux
+<p align="center"><img src="docs/home.png" alt="Bibliothèque de jeux RetroHome" width="100%"></p>
 
-*Astuce : déposez vos propres captures dans `docs/` (ex. `docs/home.png`, `docs/game.png`, `docs/admin.png`) et référencez-les ici.*
+### 🎮 Fiche de jeu
+<p align="center"><img src="docs/game.png" alt="Fiche de jeu" width="100%"></p>
+
+### 🕹️ Multiplayer — lobby des parties en ligne
+<p align="center"><img src="docs/multiplayer.png" alt="Lobby Multiplayer NetPlay" width="100%"></p>
+
+### 🛠️ Panneau d'administration
+<p align="center"><img src="docs/admin.png" alt="Panneau d'administration" width="100%"></p>
+
+### 🔐 Connexion
+<p align="center"><img src="docs/login.png" alt="Page de connexion" width="100%"></p>
 
 ---
 
@@ -66,8 +75,8 @@
 ### Étapes
 
 ```bash
-# 1. Récupérer le projet dans votre racine web (ex. WAMP)
-git clone https://github.com/<votre-compte>/retrohome.git
+# 1. Récupérer le projet dans votre racine web (ex. C:\wamp64\www)
+git clone https://github.com/filinodz/retrohome.git
 cd retrohome
 ```
 
@@ -231,15 +240,16 @@ scraping, bulk ROM import, multiple themes (default **Aurora**), 6 languages wit
 favorites/ratings/profiles, full admin panel, responsive design.
 
 **Install (WAMP/XAMPP/LAMP):**
-1. `git clone … && cd retrohome`
+1. `git clone https://github.com/filinodz/retrohome.git && cd retrohome`
 2. Open `http://localhost/retrohome/install/` (guided) — or import `sql/schema.sql` and
    copy `config.example.php` → `config.local.php`.
 3. Enable Apache `mod_rewrite`.
 4. Log in, go to **/admin**, drop ROMs into `roms/<console>/`, then use **Auto add** / **ROM scan**.
 
 **NetPlay:** run `START_NETPLAY.bat` (or `cd netplay-server && npm install && node server.js`),
-open a game → **NETPLAY** → **Host**/**Join** with a room code (same game required, same LAN).
-Best with deterministic 2-player cores (NES, SNES, GB/GBA, Genesis, Arcade).
+open a game → **NETPLAY** → **Host** (create a room) / **Join** (from the list, same game, same LAN).
+Deterministic lockstep keeps both machines perfectly in sync. Best with 2-player cores
+(NES, SNES, GB/GBA, Genesis, Arcade).
 
 > ⚠️ RetroHome ships **no ROMs or BIOS**. Provide your own, legally owned files.
 

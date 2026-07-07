@@ -52,11 +52,19 @@ function __($key) {
 }
 
 // Define legacy constants for backward compatibility
+// NOTE de sécurité : les identifiants ScreenScraper (compte membre + compte dev)
+// sont lus depuis la BASE DE DONNÉES (table settings), qui n'est PAS versionnée.
+// On ne stocke JAMAIS d'identifiant réel dans ce fichier committé : seules les
+// valeurs par défaut anonymes (partagées publiquement par les scrapers EmulatorJS)
+// servent de repli. Renseignez vos propres identifiants via /admin ou l'installeur.
 if (!defined('SCREENSCRAPER_USER')) {
     define('SCREENSCRAPER_USER', $settings->get('screenscraper_user'));
     define('SCREENSCRAPER_PASSWORD', $settings->get('screenscraper_pass'));
     define('SCREENSCRAPER_DEV_ID', base64_decode($settings->get('screenscraper_devid', 'enVyZGkxNQ==')));
     define('SCREENSCRAPER_DEV_PASSWORD', base64_decode($settings->get('screenscraper_devpass', 'eFRKd29PRmpPUUc=')));
+    // Mot de passe DEBUG développeur (optionnel) — pour le mode debug de l'API
+    // (forceupdate, forcelevel…). Vide par défaut ; défini en base si fourni.
+    define('SCREENSCRAPER_DEV_DEBUG_PASSWORD', base64_decode($settings->get('screenscraper_devdebugpass', '')));
 }
 
 // Site Configuration

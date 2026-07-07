@@ -53,3 +53,7 @@ Desktop.ini
 
 # Serveur netplay précompilé (155 Mo — remplacé par netplay-server/, dépasse la limite GitHub)
 EmulatorJS.Netplay.Server-windows-0.4.3/
+
+# Fichiers de bypass de session (dev/preview) — NE JAMAIS committer
+_pv*.php
+admin/_pv*.php
