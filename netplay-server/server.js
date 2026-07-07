@@ -136,12 +136,17 @@ io.on('connection', (socket) => {
   socket.on('data-message', (data) => {
     const sid = socket.data.sid;
     if (!sid) return;
-    // Log des synchros d'état (diagnostic) — les inputs restent silencieux.
-    if (data && data.rh_state) {
-      const len = data.rh_state.byteLength || data.rh_state.length || 0;
-      console.log(`[SYNC] État relayé (${(len / 1024).toFixed(0)} Ko) -> room ${sid}`);
+    // Log des synchros d'état (diagnostic) — les bundles d'inputs restent silencieux.
+    if (data && (data.rh_boot || data.rh_state)) {
+      const payload = data.rh_boot || data.rh_state;
+      const len = payload.byteLength || payload.length || 0;
+      console.log(`[SYNC] État relayé (${(len / 1024).toFixed(0)} Ko, époque ${data.rh_e || '-'}) -> room ${sid}`);
     } else if (data && data.rh_hello) {
       console.log(`[SYNC] Demande d'état -> room ${sid}`);
+    } else if (data && data.rh_ready) {
+      console.log(`[SYNC] Joueur prêt -> room ${sid}`);
+    } else if (data && data.rh_go) {
+      console.log(`[SYNC] Top départ -> room ${sid}`);
     }
     socket.to(sid).emit('data-message', data);
   });

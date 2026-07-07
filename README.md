@@ -129,6 +129,13 @@ Le netplay utilise le **menu intégré d'EmulatorJS** (relais serveur, fiable en
    cliquez sur **Join**.
 3. La partie se synchronise automatiquement. Le bouton **?** dans le jeu rappelle ces étapes.
 
+**Comment ça marche (lockstep déterministe)** : à la connexion, l'invité reçoit l'état exact du
+jeu de l'hôte, puis les deux émulateurs échangent leurs **inputs numérotés par frame** et
+n'avancent que lorsque les inputs de l'autre joueur sont arrivés. Les deux machines exécutent
+ainsi strictement les mêmes frames — la désynchronisation est impossible sur les cœurs
+déterministes. Un resync complet de sécurité a lieu toutes les 2 minutes. Le prix : ~83 ms de
+latence d'input (standard du lockstep), imperceptible en LAN.
+
 > **Il n'est pas nécessaire d'activer le HTTPS** : le netplay passe par Socket.IO (relais serveur),
 > pas par WebRTC en contexte sécurisé.
 
