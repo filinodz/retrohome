@@ -1,0 +1,5 @@
+# RetroHome — dossier de contenus (ROMs, jaquettes, vidéos) : aucun script ne doit s'y exécuter.
+Options -Indexes
+<FilesMatch "\.(?i:php[0-9]?|phtml|phar|phps|pl|py|cgi|sh|asp|aspx|jsp|htaccess)$">
+    Require all denied
+</FilesMatch>

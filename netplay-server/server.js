@@ -52,6 +52,7 @@ const httpServer = http.createServer((req, res) => {
         room_name: room.room_name,
         current: playerCount(room),
         max: room.max,
+        password: !!room.password, // room protégée (le client demandera le mot de passe)
         game_id: room.game_id   // permet au lobby RetroHome de retrouver le jeu
       };
     }
@@ -62,7 +63,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (url.pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', version: 2, rooms: Object.keys(rooms).length, uptime: process.uptime() }));
+    res.end(JSON.stringify({ status: 'ok', version: 3, rooms: Object.keys(rooms).length, uptime: process.uptime() }));
     return;
   }
 

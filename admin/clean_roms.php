@@ -10,6 +10,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $rom_extensions = ['zip', '7z', 'rar', 'sfc', 'smc', 'fig', 'bin', 'gba', 'gbc', 'gb', 'nes', 'pce', 'md', 'mgd', 'sms', 'gg', 'col', 'ngp', 'ngc', 'ws', 'wsc', 'iso', 'cue', 'chd'];
 
 // --- Actions ---
+if (isset($_POST['action']) && !rh_csrf_valid($_POST['csrf'] ?? '')) {
+    header('HTTP/1.0 403 Forbidden');
+    echo "Jeton de sécurité invalide ou expiré. Rechargez la page et réessayez.";
+    exit();
+}
 if (isset($_POST['action'])) {
     if ($_POST['action'] === 'delete_game' && isset($_POST['id'])) {
         // Suppression sécurisée (déjà implémentée dans delete_game.php, on peut rediriger ou réutiliser la logique)
@@ -196,7 +201,7 @@ scanRoms($roms_dir, $results['untracked_files'], $db, $rom_extensions);
                                         </div>
                                     </td>
                                     <td style="text-align: right;">
-                                        <form method="POST">
+                                        <form method="POST"><input type="hidden" name="csrf" value="<?= rh_csrf_token() ?>">
                                             <input type="hidden" name="id" value="<?= $game['id'] ?>">
                                             <input type="hidden" name="new_path" value="<?= htmlspecialchars($game['suggested_path']) ?>">
                                             <input type="hidden" name="old_full_path" value="<?= htmlspecialchars($game['found_at']) ?>">
@@ -248,7 +253,7 @@ scanRoms($roms_dir, $results['untracked_files'], $db, $rom_extensions);
                                         <td><div style="font-weight: 700; color: white;"><?= htmlspecialchars($game['title']) ?></div></td>
                                         <td style="font-family: monospace; font-size: 0.7rem; opacity: 0.6;"><?= htmlspecialchars($game['rom_path']) ?></td>
                                         <td style="text-align: right;">
-                                            <form method="POST" onsubmit="return confirm('<?= __('admin_confirm_delete_entry') ?>');">
+                                            <form method="POST" onsubmit="return confirm('<?= __('admin_confirm_delete_entry') ?><input type="hidden" name="csrf" value="<?= rh_csrf_token() ?>">');">
                                                 <input type="hidden" name="id" value="<?= $game['id'] ?>">
                                                 <input type="hidden" name="action" value="delete_game">
                                                 <button type="submit" class="btn-modern btn-danger" style="font-size: 0.7rem; padding: 8px 15px;">
@@ -298,7 +303,7 @@ scanRoms($roms_dir, $results['untracked_files'], $db, $rom_extensions);
                                         <td style="font-family: monospace; font-size: 0.7rem; color: white;"><?= htmlspecialchars($file['path']) ?></td>
                                         <td><span class="badge badge-secondary" style="font-size: 0.65rem;"><?= $file['size'] ?> MB</span></td>
                                         <td style="text-align: right;">
-                                            <form method="POST" onsubmit="return confirm('<?= __('admin_confirm_delete_file') ?>');">
+                                            <form method="POST" onsubmit="return confirm('<?= __('admin_confirm_delete_file') ?><input type="hidden" name="csrf" value="<?= rh_csrf_token() ?>">');">
                                                 <input type="hidden" name="path" value="<?= htmlspecialchars($file['path']) ?>">
                                                 <input type="hidden" name="action" value="delete_file">
                                                 <button type="submit" class="btn-modern btn-danger" style="font-size: 0.7rem; padding: 8px 15px;">

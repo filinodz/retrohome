@@ -106,7 +106,7 @@
         '<div class="mp-card-cover"><img src="' + cover + '" alt="" loading="lazy">' +
           '<span class="mp-live-dot"><i class="fas fa-circle"></i> LIVE</span></div>' +
         '<div class="mp-card-body">' +
-          '<div class="mp-room-name"><i class="fas fa-door-open"></i> ' + escapeHtml(room.room_name || 'Room') + '</div>' +
+          '<div class="mp-room-name"><i class="fas fa-' + (room.password ? 'lock' : 'door-open') + '"></i> ' + escapeHtml(room.room_name || 'Room') + '</div>' +
           '<div class="mp-game-title">' + escapeHtml(title) + '</div>' +
           '<div class="mp-console">' + escapeHtml(consoleName) + '</div>' +
           '<div class="mp-meta"><span class="mp-players"><i class="fas fa-users"></i> ' +

@@ -169,8 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_FILES['rom']) && $_FILES['rom']['error'] === UPLOAD_ERR_OK) {
             $rom_original_name = $_FILES['rom']['name'];
             $rom_ext = strtolower(pathinfo($rom_original_name, PATHINFO_EXTENSION));
-            $allowed_rom_ext = ['zip','sfc','smc','fig','bin','gba','gbc','gb','nes','pce','md','mgd','sms','gg','col','ngp','ngc','ws','wsc','7z','iso','cue'];
-            if (!in_array($rom_ext, $allowed_rom_ext)) {
+            if (!rh_is_allowed_rom_ext($rom_ext)) {
                  $errors[] = "Extension de ROM non autorisée: .$rom_ext";
             } else {
                 // Utiliser le nouveau slug pour le nom de fichier
@@ -401,7 +400,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="form-group md:col-span-2 border-t border-border-color pt-6 mt-4">
                             <label for="rom"><?= __('admin_replace_rom') ?> :</label>
-                            <input type="file" id="rom" name="rom" accept=".zip,.sfc,.smc,.fig,.bin,.gba,.gbc,.gb,.nes,.pce,.md,.mgd,.sms,.gg,.col,.ngp,.ngc,.ws,.wsc,.7z,.iso,.cue">
+                            <input type="file" id="rom" name="rom" accept="<?= '.' . implode(',.', RH_ROM_EXTENSIONS) ?>">
                              <?php if (!empty($game['rom_path'])): ?>
                                 <p class="current-file-info"><i class="fas fa-file-archive"></i><?= __('admin_current_file') ?> <?= htmlspecialchars(basename($game['rom_path'])) ?></p>
                              <?php else: ?>

@@ -9,8 +9,20 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $message = '';
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Réglages stockés encodés en base64 (identifiants développeur ScreenScraper)
+$base64Settings = ['screenscraper_devid', 'screenscraper_devpass'];
+
+// Reprise de l'ancienne clé erronée (l'admin enregistrait "screenscraper_password"
+// alors que le site lit "screenscraper_pass").
+if ($settings->get('screenscraper_pass', '') === '' && $settings->get('screenscraper_password', '') !== '') {
+    $settings->set('screenscraper_pass', $settings->get('screenscraper_password'));
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['settings']) && is_array($_POST['settings'])) {
     foreach ($_POST['settings'] as $key => $value) {
+        if (!is_string($key) || !preg_match('/^[a-z0-9_]{1,100}$/', $key) || !is_scalar($value)) continue;
+        $value = trim((string)$value);
+        if (in_array($key, $base64Settings, true)) $value = $value === '' ? '' : base64_encode($value);
         $settings->set($key, $value);
     }
     $message = __('admin_settings_updated');
@@ -21,12 +33,20 @@ $allSettings = $settings->getAll();
 // Define known settings with human names for better UI
 $knownSettings = [
     'site_name' => __('install_site_name'),
-    'screenscraper_user' => __('install_ss_user'),
-    'screenscraper_password' => __('install_ss_pass'),
     'site_url' => __('install_site_url'),
+    'netplay_url' => __('admin_netplay_url'),
+    'screenscraper_user' => __('install_ss_user'),
+    'screenscraper_pass' => __('install_ss_pass'),
+    'screenscraper_devid' => __('admin_ss_devid'),
+    'screenscraper_devpass' => __('admin_ss_devpass'),
+];
+$settingHelp = [
+    'netplay_url' => __('admin_netplay_url_help'),
+    'screenscraper_devid' => __('admin_ss_dev_help'),
 ];
 
-$excludedSettings = ['screenscraper_devid', 'screenscraper_devpass'];
+// Clés internes / obsolètes non affichées
+$excludedSettings = ['screenscraper_password', 'screenscraper_devdebugpass'];
 
 ?>
 <!DOCTYPE html>
@@ -76,7 +96,9 @@ $excludedSettings = ['screenscraper_devid', 'screenscraper_devpass'];
                             // Skip site_theme as it's managed via Themes page
                             if ($key === 'site_theme') continue;
                             
+                            if (in_array($key, $excludedSettings, true)) continue;
                             $value = $settings->get($key);
+                            if (in_array($key, $base64Settings, true)) $value = $value ? base64_decode($value) : '';
                             $isPassword = (strpos($key, 'password') !== false || strpos($key, 'pass') !== false);
                         ?>
                             <div class="form-group">
@@ -87,6 +109,9 @@ $excludedSettings = ['screenscraper_devid', 'screenscraper_devpass'];
                                        value="<?= htmlspecialchars($value ?? '') ?>" 
                                        class="form-control" 
                                        placeholder="<?= __('enter') ?> <?= strtolower($label) ?>...">
+                                <?php if (!empty($settingHelp[$key])): ?>
+                                    <small style="display:block;margin-top:8px;opacity:.6;font-size:.75rem;line-height:1.5"><?= $settingHelp[$key] ?></small>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>

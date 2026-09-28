@@ -59,7 +59,7 @@ Le thème **Aurora** (par défaut) : glassmorphism, dégradés « aurore », typ
 | Backend | PHP (PDO/MySQL), architecture MVC légère, système de thèmes & de langues |
 | Frontend | HTML/CSS (Tailwind + CSS maison), JavaScript vanilla, Font Awesome, Animate.css |
 | Émulation | EmulatorJS (moteur + cœurs dans `data/`) |
-| NetPlay | Node.js + Socket.IO (WebRTC/relais), dans `netplay-server/` |
+| NetPlay | Node.js + Socket.IO (relais) dans `netplay-server/` + lockstep déterministe côté navigateur |
 | Scraping | API ScreenScraper.fr |
 
 ---
@@ -67,110 +67,130 @@ Le thème **Aurora** (par défaut) : glassmorphism, dégradés « aurore », typ
 ## 🚀 Installation (WAMP / XAMPP / LAMP)
 
 ### Prérequis
-- **PHP 7.4+** avec l'extension `pdo_mysql`
+- **PHP 7.4+** (8.x recommandé) avec les extensions `pdo_mysql`, `curl` et `gd`
 - **MySQL / MariaDB**
-- **Apache** avec `mod_rewrite` activé (URLs propres)
-- **Node.js 16+** *(optionnel — uniquement pour le NetPlay)*
+- **Apache** avec `mod_rewrite` activé et `AllowOverride All` sur le dossier
+- **Node.js 16+** *(uniquement pour le NetPlay)*
 
-### Étapes
+### En 3 étapes
 
 ```bash
-# 1. Récupérer le projet dans votre racine web (ex. C:\wamp64\www)
+# 1. Récupérer le projet dans votre racine web (ex. C:\wamp64\www ou /var/www/html)
 git clone https://github.com/filinodz/retrohome.git
-cd retrohome
 ```
 
-**2. Créer la base de données et la configuration**
+**2. Ouvrir le site** — `http://localhost/retrohome/` : tant que RetroHome n'est pas installé,
+vous êtes **redirigé automatiquement vers l'assistant d'installation**. Renseignez la base de
+données, le nom du site et le compte administrateur : l'assistant crée la base, importe le schéma
+(32 consoles préconfigurées) et génère `config.local.php`.
 
-Deux options :
+> 🔒 Une fois l'installation terminée, l'assistant se **verrouille** : il ne peut plus être relancé
+> tant que `config.local.php` existe (impossible de réinitialiser le compte admin à distance).
 
-- **A. Installeur guidé (recommandé)** — ouvrez `http://localhost/retrohome/install/`
-  et laissez-vous guider (base de données, compte admin, ScreenScraper). L'installeur
-  importe `sql/schema.sql` et génère automatiquement `config.local.php`.
+**3. Ajouter vos jeux** — connectez-vous, ouvrez **/admin** et choisissez :
 
-- **B. Manuelle**
-  ```bash
-  # Importer le schéma propre
-  mysql -u root -p -e "CREATE DATABASE retro CHARACTER SET utf8mb4;"
-  mysql -u root -p retro < sql/schema.sql
+| Mode | Usage |
+|------|-------|
+| **Ajout manuel** | vous envoyez la ROM + une jaquette (et une vidéo optionnelle) |
+| **Ajout automatique** | vous envoyez la ROM : titre, année, éditeur, description, jaquette et vidéo sont récupérés sur ScreenScraper |
+| **Ajout en masse / Scan de ROMs** | déposez vos ROMs dans `roms/<console>/` (ex. `roms/nes/`), lancez le scan : tout est importé et scrapé d'un coup |
 
-  # Créer votre configuration locale (identifiants MySQL)
-  cp config.example.php config.local.php
-  # …puis éditez config.local.php
-  ```
+<details>
+<summary>Installation manuelle (sans l'assistant)</summary>
 
-**3. Activer le rewrite Apache** — assurez-vous que `AllowOverride All` est actif pour le
-dossier, et que `mod_rewrite` est chargé (le fichier `.htaccess` fait le reste).
+```bash
+mysql -u root -p -e "CREATE DATABASE retro CHARACTER SET utf8mb4;"
+mysql -u root -p retro < sql/schema.sql
+mysql -u root -p retro < sql/social_migration.sql
+cp config.example.php config.local.php   # puis renseignez vos identifiants MySQL
+```
+Créez ensuite un compte via la page de connexion et passez-le administrateur
+(`UPDATE users SET role='admin' WHERE username='…';`).
+</details>
 
-**4. Ajouter vos jeux** — connectez-vous, allez dans **/admin**, puis :
-- déposez vos ROMs dans `roms/<console>/` ,
-- utilisez **Ajout automatique** ou **Scan de ROMs** pour scraper jaquettes & infos.
+### 🖼️ Scraping automatique (ScreenScraper)
+
+L'ajout automatique utilise l'API de [ScreenScraper.fr](https://www.screenscraper.fr), qui exige
+des **identifiants développeur** :
+
+1. Créez un compte sur screenscraper.fr, puis demandez un accès API (forum, rubrique *« Demande d'accès API »*).
+2. Dans **Admin › Réglages**, saisissez l'**identifiant** et le **mot de passe développeur** reçus
+   (et, si vous le souhaitez, votre compte ScreenScraper pour bénéficier de vos quotas).
+
+Sans ces identifiants, l'ajout manuel fonctionne normalement ; l'ajout automatique affiche un
+message clair vous invitant à les renseigner. Les identifiants restent **en base de données** :
+ils ne sont jamais écrits dans les fichiers du dépôt ni envoyés au navigateur.
 
 > ⚠️ **RetroHome ne fournit aucune ROM ni BIOS.** Vous devez fournir vos propres
-> fichiers, dont vous possédez légalement les droits. Voir la section [Légal](#-mentions-légales).
+> fichiers, dont vous possédez légalement les droits. Voir la section [Légal](#️-mentions-légales).
 
 ---
 
-## 🌐 NetPlay LAN — jouer avec vos amis
+## 🌐 NetPlay LAN — jouer à deux (ou plus) en même temps
 
-Le NetPlay permet de jouer à plusieurs sur le **même réseau local** (Wi‑Fi/LAN).
+Le NetPlay permet de jouer **simultanément** à plusieurs sur le **même réseau local** (Wi‑Fi/LAN) :
+l'hôte contrôle le **joueur 1**, son ami le **joueur 2** (jusqu'à 4 joueurs), et chacun voit
+exactement la même partie sur son écran.
 
 ### 1. Démarrer le serveur (sur le PC hôte)
 
-```bash
-# Double-cliquez sur START_NETPLAY.bat (Windows)
-# — ou —
-cd netplay-server
-npm install      # première fois uniquement
-node server.js
-```
+| Système | Commande |
+|---------|----------|
+| Windows | double-cliquez sur **`START_NETPLAY.bat`** |
+| Linux / macOS | `./START_NETPLAY.sh` |
+| Manuel | `cd netplay-server && npm install && npm start` |
 
 Le serveur affiche l'adresse à partager, par ex. `http://192.168.1.20:3000`.
-Autorisez le **port 3000** dans le pare-feu Windows si demandé.
+Autorisez le **port 3000/TCP** dans le pare-feu si demandé.
 
 ### 2. Jouer
 
-Le netplay utilise le **menu intégré d'EmulatorJS** (relais serveur, fiable en LAN) :
+1. **Hôte** : ouvrez un jeu → **NETPLAY** → *Create a room* → donnez un nom
+   (et un **mot de passe** si vous voulez une partie privée).
+2. **Ami** : ouvrez le site via l'**IP de l'hôte** (ex. `http://192.168.1.20/retrohome`), puis
+   - soit la page **Multiplayer**, qui liste les parties en cours → **Rejoindre** ;
+   - soit **le même jeu** → **NETPLAY** → *Join*.
+3. La partie se synchronise automatiquement (« NETPLAY : partie synchronisée — bon jeu ! »).
 
-1. **Hôte** : ouvrez un jeu → bouton **NETPLAY** (ou l'icône réseau de la barre de l'émulateur) →
-   **Create a room** → donnez un nom.
-2. **Ami** : ouvrez **le même jeu** → **NETPLAY** → la room de l'hôte apparaît dans la **liste** →
-   cliquez sur **Join**.
-3. La partie se synchronise automatiquement. Le bouton **?** dans le jeu rappelle ces étapes.
+### Comment ça marche
 
-**Comment ça marche (lockstep déterministe)** : à la connexion, l'invité reçoit l'état exact du
-jeu de l'hôte, puis les deux émulateurs échangent leurs **inputs numérotés par frame** et
-n'avancent que lorsque les inputs de l'autre joueur sont arrivés. Les deux machines exécutent
-ainsi strictement les mêmes frames — la désynchronisation est impossible sur les cœurs
-déterministes. Un resync complet de sécurité a lieu toutes les 2 minutes. Le prix : ~83 ms de
-latence d'input (standard du lockstep), imperceptible en LAN.
+RetroHome remplace la synchronisation native d'EmulatorJS (non fonctionnelle) par un
+**lockstep déterministe** (`public/js/netplay-fix.js`) :
 
-> **Il n'est pas nécessaire d'activer le HTTPS** : le netplay passe par Socket.IO (relais serveur),
-> pas par WebRTC en contexte sécurisé.
+- au démarrage, tous les joueurs chargent **le même état** du jeu et partent ensemble ;
+- chaque entrée (bouton pressé) est numérotée par frame et appliquée **à la même frame sur
+  toutes les machines** (délai de 4 frames ≈ 67 ms, imperceptible en LAN) ;
+- une frame ne s'exécute que lorsque les entrées de tous les joueurs sont connues ;
+- toutes les 3 secondes, les machines comparent une empreinte de l'état du jeu : en cas de
+  divergence, l'hôte **resynchronise automatiquement** la partie.
 
-**Configuration réseau :**
-- Par défaut, le client contacte `http://<hôte>:3000`. Pour cibler une autre machine, définissez
-  `netplay_url` dans les **réglages admin** (ex. `http://192.168.1.20:3000`).
-- **Pour jouer depuis un autre PC**, l'ami ouvre simplement le site via l'**IP de l'hôte**
-  (ex. `http://192.168.1.20/retrohome`). `SITE_URL` s'adapte automatiquement à l'hôte utilisé —
-  aucun réglage manuel n'est nécessaire, les jeux et l'API se chargent correctement pour chacun.
+Validé par des tests automatisés à deux navigateurs (NES et arcade Neo Geo / MAME 2003+) :
+après plus d'une minute de jeu avec les deux joueurs actifs, les deux écrans restent
+**identiques au pixel près**.
 
-### 3. Rubrique « Multiplayer »
-Le menu **Multiplayer** liste en temps réel les parties NetPlay en cours sur le réseau et permet
-de les **rejoindre en un clic**. Les jeux compatibles affichent un badge **MULTI**.
+> Pas besoin de HTTPS : le NetPlay passe par Socket.IO (relais serveur), pas par WebRTC.
 
-### 🎯 Jeux/systèmes recommandés pour le NetPlay
+**Réseau :** par défaut le client contacte `http://<adresse du site>:3000`. Pour un autre
+serveur ou port, renseignez **Admin › Réglages › URL du serveur NetPlay**.
 
-Le netplay fonctionne mieux avec des cœurs **déterministes** et des jeux **2 joueurs** :
+### 🎯 Systèmes recommandés
 
 | ✅ Recommandés | ⚠️ À éviter |
 |----------------|-------------|
-| NES, SNES | Systèmes 3D lourds (PSX, N64, PSP) |
-| Game Boy / GBC / GBA | Cœurs non déterministes |
+| NES, SNES, Game Boy / GBC / GBA | Systèmes 3D lourds (PSX, N64, PSP) |
 | Sega Genesis / Master System | Jeux 1 joueur uniquement |
-| Arcade (FBNeo, MAME 2003) | |
+| Arcade (FBNeo, MAME 2003+) | |
 
-*Tous les cœurs EmulatorJS ne supportent pas le netplay ; privilégiez des jeux de combat/versus.*
+---
+
+## 🔐 Sécurité
+
+- Assistant d'installation **verrouillé** après usage.
+- Mots de passe hachés (`password_hash`), requêtes SQL préparées (PDO).
+- Cookie de session `HttpOnly` + `SameSite=Lax`, **jetons anti-CSRF** sur les suppressions.
+- Fichiers envoyés filtrés (liste blanche d'extensions de ROM, extension des images déduite de
+  leur contenu) et **exécution de scripts interdite** dans `roms/` et `assets/`.
+- Identifiants (MySQL, ScreenScraper) hors du dépôt : `config.local.php` (ignoré par git) et base de données.
 
 ---
 
@@ -191,12 +211,13 @@ retrohome/
 ├── data/               Moteur EmulatorJS (cœurs, loader) — data/bios & roms exclus du dépôt
 ├── includes/           Settings, ThemeManager, LanguageManager…
 ├── lang/               Fichiers de traduction (fr, en, ar, es, ru, zh)
-├── netplay-server/     Serveur Node.js Socket.IO pour le NetPlay
+├── netplay-server/     Serveur NetPlay (Node.js + Socket.IO)
 ├── public/             CSS/JS/vendors partagés (dont emulator.js, script.js)
 ├── roms/               Vos ROMs (non versionnées)
-├── sql/schema.sql      Schéma de base de données propre (pour l'installation)
+├── sql/               Schéma de la base (schema.sql + social_migration.sql)
 ├── templates/          Templates de secours
 ├── themes/             Thèmes : aurora, classic, classic-v2, cyberpunk, modern
+├── install/           Assistant d'installation
 ├── config.php          Bootstrap (charge config.local.php)
 └── config.example.php  Modèle de configuration
 ```
@@ -240,16 +261,17 @@ scraping, bulk ROM import, multiple themes (default **Aurora**), 6 languages wit
 favorites/ratings/profiles, full admin panel, responsive design.
 
 **Install (WAMP/XAMPP/LAMP):**
-1. `git clone https://github.com/filinodz/retrohome.git && cd retrohome`
-2. Open `http://localhost/retrohome/install/` (guided) — or import `sql/schema.sql` and
-   copy `config.example.php` → `config.local.php`.
-3. Enable Apache `mod_rewrite`.
-4. Log in, go to **/admin**, drop ROMs into `roms/<console>/`, then use **Auto add** / **ROM scan**.
+1. `git clone https://github.com/filinodz/retrohome.git` into your web root.
+2. Open `http://localhost/retrohome/` — you are redirected to the **setup wizard** (database,
+   admin account). The wizard locks itself once done.
+3. Log in, open **/admin** and add games manually, automatically (ScreenScraper) or in bulk
+   (drop ROMs into `roms/<console>/` and run the scan). Automatic scraping needs ScreenScraper
+   developer credentials, entered in **Admin › Settings**.
 
-**NetPlay:** run `START_NETPLAY.bat` (or `cd netplay-server && npm install && node server.js`),
-open a game → **NETPLAY** → **Host** (create a room) / **Join** (from the list, same game, same LAN).
-Deterministic lockstep keeps both machines perfectly in sync. Best with 2-player cores
-(NES, SNES, GB/GBA, Genesis, Arcade).
+**NetPlay:** run `START_NETPLAY.bat` / `./START_NETPLAY.sh` (or `cd netplay-server && npm install && npm start`).
+Host: open a game → **NETPLAY** → create a room (optional password). Friend: **Multiplayer** page
+→ **Join** (same LAN). Players play **simultaneously** (player 1, player 2…). A deterministic
+lockstep with automatic desync detection keeps every screen identical.
 
 > ⚠️ RetroHome ships **no ROMs or BIOS**. Provide your own, legally owned files.
 

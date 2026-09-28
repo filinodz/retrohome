@@ -262,7 +262,7 @@ $consoles = $stmtConsoles->fetchAll(PDO::FETCH_ASSOC);
                                             <a href="edit_game.php?id=<?= $game['id'] ?>" class="btn-modern btn-secondary" style="padding: 10px; border-radius: 12px;" title="<?= __('edit') ?>">
                                                 <i class="fas fa-pencil-alt text-primary"></i>
                                             </a>
-                                            <a href="delete_game?id=<?= $game['id'] ?>&page=<?= $page ?>&search=<?= urlencode($search) ?>&console_id=<?= $console_id ?>" class="btn-modern btn-secondary" style="padding: 10px; border-radius: 12px;" onclick="return confirm('<?= __('admin_confirm_delete') ?>');" title="<?= __('delete') ?>">
+                                            <a href="delete_game?id=<?= $game['id'] ?>&csrf=<?= rh_csrf_token() ?>&page=<?= $page ?>&search=<?= urlencode($search) ?>&console_id=<?= $console_id ?>" class="btn-modern btn-secondary" style="padding: 10px; border-radius: 12px;" onclick="return confirm('<?= __('admin_confirm_delete') ?>');" title="<?= __('delete') ?>">
                                                 <i class="fas fa-trash-alt text-accent"></i>
                                             </a>
                                         </div>

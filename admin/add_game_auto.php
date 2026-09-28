@@ -1,4 +1,6 @@
 <?php
+// Masque les identifiants ScreenScraper dans les URLs écrites au journal
+if (!function_exists('rh_redact')) { function rh_redact($u) { return preg_replace('/((?:dev|ss)(?:id|password)|password)=[^&]*/i', '$1=***', (string)$u); } }
 require_once '../config.php'; // Chemin relatif
 
 // --- Initialisation et Sécurité ---
@@ -62,8 +64,8 @@ function cleanRomFilename($filename) {
  */
 function callScreenScraperAPI($url) {
     // Vérifier si les constantes sont définies
-    if (!defined('SCREENSCRAPER_USER') || !defined('SCREENSCRAPER_PASSWORD') || !defined('SCREENSCRAPER_DEV_ID') || !defined('SCREENSCRAPER_DEV_PASSWORD')) {
-        return ['error' => "Identifiants ScreenScraper non définis dans config.php", 'http_code' => 500];
+    if (!defined('SCREENSCRAPER_DEV_ID') || SCREENSCRAPER_DEV_ID === '' || !defined('SCREENSCRAPER_DEV_PASSWORD') || SCREENSCRAPER_DEV_PASSWORD === '') {
+        return ['error' => "Identifiants développeur ScreenScraper manquants ou refusés : renseignez-les dans Admin › Réglages (voir le README, section Scraping).", 'http_code' => 401];
     }
 
     $full_url = $url . (strpos($url, '?') === false ? '?' : '&') // Ajoute ? ou &
@@ -118,7 +120,13 @@ function callScreenScraperAPI($url) {
 
     $data = json_decode($response, true);
     if (json_last_error() !== JSON_ERROR_NONE) {
-        return ['error' => "Réponse API invalide (JSON): " . json_last_error_msg(), 'http_code' => $http_code];
+        if (stripos((string)$response, 'identifiants d') !== false || stripos((string)$response, 'Erreur de login') !== false) {
+            return ['error' => "Identifiants développeur ScreenScraper manquants ou refusés : renseignez-les dans Admin › Réglages (voir le README, section Scraping).", 'http_code' => 401];
+        }
+        if (trim((string)$response) === '') {
+            return ['error' => "ScreenScraper n'a pas répondu (réseau ou service indisponible). Réessayez plus tard.", 'http_code' => $http_code];
+        }
+        return ['error' => "Réponse inattendue de ScreenScraper : " . mb_substr(strip_tags((string)$response), 0, 160), 'http_code' => $http_code];
     }
     if (isset($data['ssuser']['connect']) && $data['ssuser']['connect'] == 0) {
          return ['error' => "Échec de connexion à ScreenScraper (user/pass incorrects ?).", 'http_code' => 401];
@@ -208,7 +216,7 @@ function findBestLevenMatch($games, $searchTerm) {
  */
 function downloadMedia($url, $destination_path) {
     if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
-        error_log("DownloadMedia: URL invalide ou vide fournie: " . $url);
+        error_log("DownloadMedia: URL invalide ou vide fournie: " . rh_redact($url));
         return ['success' => false, 'error' => 'URL invalide'];
     }
 
@@ -232,10 +240,10 @@ function downloadMedia($url, $destination_path) {
 
             if (isset($api_response['error'])) {
                 if ($api_response['error'] === 'NOMEDIA') {
-                    error_log("DownloadMedia: ScreenScraper a répondu 'NOMEDIA' pour l'URL: " . $url);
+                    error_log("DownloadMedia: ScreenScraper a répondu 'NOMEDIA' pour l'URL: " . rh_redact($url));
                     return ['success' => false, 'error' => 'NOMEDIA'];
                 } else {
-                    error_log("DownloadMedia: Erreur API média ScreenScraper: " . $api_response['error'] . " URL: " . $url);
+                    error_log("DownloadMedia: Erreur API média ScreenScraper: " . $api_response['error'] . " URL: " . rh_redact($url));
                     return ['success' => false, 'error' => $api_response['error']];
                 }
             } elseif (isset($api_response['is_media_content']) && $api_response['is_media_content']) {
@@ -246,13 +254,13 @@ function downloadMedia($url, $destination_path) {
                 }
                 // Vérifier la taille du fichier écrit
                  if (filesize($destination_path) == 0) {
-                     error_log("DownloadMedia: Fichier média écrit mais vide pour $url.");
+                     error_log("DownloadMedia: Fichier média écrit mais vide pour " . rh_redact($url) . ".");
                      @unlink($destination_path);
                      return ['success' => false, 'error' => 'Fichier média téléchargé vide.'];
                  }
                  return ['success' => true];
             } else {
-                 error_log("DownloadMedia: Réponse inattendue de l'API média pour l'URL: " . $url);
+                 error_log("DownloadMedia: Réponse inattendue de l'API média pour l'URL: " . rh_redact($url));
                  return ['success' => false, 'error' => 'Réponse inattendue de l\'API média.'];
             }
 
@@ -282,12 +290,12 @@ function downloadMedia($url, $destination_path) {
             fclose($fp);
 
             if (!$success_curl || $http_code >= 400) {
-                error_log("DownloadMedia: Échec téléchargement $url. Code: $http_code. cURL Error: $curl_error");
+                error_log("DownloadMedia: Échec téléchargement " . rh_redact($url) . ". Code: $http_code. cURL Error: $curl_error");
                 @unlink($destination_path);
                 return ['success' => false, 'error' => "Erreur $http_code lors du téléchargement."];
             }
             if (filesize($destination_path) == 0) {
-                 error_log("DownloadMedia: Fichier téléchargé vide pour $url.");
+                 error_log("DownloadMedia: Fichier téléchargé vide pour " . rh_redact($url) . ".");
                  @unlink($destination_path);
                  return ['success' => false, 'error' => 'Fichier téléchargé vide.'];
              }
@@ -295,7 +303,7 @@ function downloadMedia($url, $destination_path) {
             return ['success' => true];
         }
     } catch (Exception $e) {
-        error_log("DownloadMedia: Exception téléchargement $url: " . $e->getMessage());
+        error_log("DownloadMedia: Exception téléchargement " . rh_redact($url) . ": " . $e->getMessage());
         @unlink($destination_path);
         return ['success' => false, 'error' => 'Exception: ' . $e->getMessage()];
     }
@@ -497,7 +505,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$noConsolesConfigured) { // N'exé
                 $rom_filename = $gameSlug . '.' . $rom_ext; // Nom basé sur slug API
                 $rom_destination = $gameDirAbsolute . $rom_filename;
                 error_log("Admin Auto Add: Tentative déplacement ROM vers: " . $rom_destination);
-                if (!move_uploaded_file($rom_file['tmp_name'], $rom_destination)) {
+                if (!rh_is_allowed_rom_ext($rom_ext)) {
+                    $errors[] = "Extension de ROM non autorisée : .$rom_ext";
+                } elseif (!move_uploaded_file($rom_file['tmp_name'], $rom_destination)) {
                     $errors[] = "Erreur technique lors du déplacement de la ROM vers " . $rom_destination . ". Vérifiez les permissions et l'espace disque.";
                      error_log("Admin Auto Add: Échec move_uploaded_file pour ROM. Source: " . $rom_file['tmp_name']);
                 } else {
@@ -508,12 +518,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$noConsolesConfigured) { // N'exé
                 // 2. Cover (seulement si ROM OK)
                 $real_errors = array_filter($errors, fn($e) => strpos($e, 'INFO:') !== 0);
                 if (empty($real_errors) && !empty($coverUrl)) {
-                    $cover_ext = strtolower($coverFormat) ?: 'png';
+                    $cover_ext = in_array(strtolower((string)$coverFormat), RH_IMAGE_EXTENSIONS, true) ? strtolower($coverFormat) : 'png';
                     $cover_filename = $gameSlug . '.' . $cover_ext;
                     $cover_destination = $imagesDir . $cover_filename;
-                    error_log("Admin Auto Add: Tentative téléchargement Cover depuis: " . $coverUrl);
+                    error_log("Admin Auto Add: Tentative téléchargement Cover depuis: " . rh_redact($coverUrl));
                     $downloadResult = downloadMedia($coverUrl, $cover_destination);
+                    if ($downloadResult['success'] && ($fixedCover = rh_fix_image_file($cover_destination)) === null) {
+                        $downloadResult = ['success' => false, 'error' => 'le fichier reçu n\'est pas une image'];
+                    }
                     if ($downloadResult['success']) {
+                         $cover_filename = basename($fixedCover);
                          $cover_path_relative = $gameBaseRelativePath . 'images/' . $cover_filename;
                          error_log("Admin Auto Add: Cover téléchargée: " . $cover_path_relative);
                     } else {
@@ -529,7 +543,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$noConsolesConfigured) { // N'exé
                 $real_errors = array_filter($errors, fn($e) => strpos($e, 'INFO:') !== 0);
                 if (empty($real_errors)) {
                     $mediaVideoUrl = $videoUrl ?: 'https://api.screenscraper.fr/api2/mediaVideoJeu.php?systemeid=' . $systemId . '&jeuid=' . $ssGameId . '&media=video';
-                    $preview_ext = strtolower($videoFormat) ?: 'mp4';
+                    $preview_ext = in_array(strtolower((string)$videoFormat), RH_VIDEO_EXTENSIONS, true) ? strtolower($videoFormat) : 'mp4';
                     $preview_filename = $gameSlug . '.' . $preview_ext;
                     $preview_destination = $previewDir . $preview_filename;
                     error_log("Admin Auto Add: Tentative DL preview via: " . $mediaVideoUrl);
@@ -619,6 +633,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$noConsolesConfigured) { // N'exé
 
 } // Fin if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
+// --- Aperçu de jaquette (proxy ScreenScraper, identifiants ajoutés côté serveur) ---
+if (isset($_GET['action']) && $_GET['action'] === 'thumb') {
+    $sys = (int)($_GET['systemeid'] ?? 0);
+    $jeu = (int)($_GET['jeuid'] ?? 0);
+    if ($sys <= 0 || $jeu <= 0) { http_response_code(400); exit; }
+    $url = 'https://api.screenscraper.fr/api2/mediaJeu.php?systemeid=' . $sys . '&jeuid=' . $jeu
+         . '&media=box-2D&region=wor&maxwidth=300&ssid=' . urlencode(SCREENSCRAPER_USER)
+         . '&sspassword=' . urlencode(SCREENSCRAPER_PASSWORD) . '&devid=' . urlencode(SCREENSCRAPER_DEV_ID)
+         . '&devpassword=' . urlencode(SCREENSCRAPER_DEV_PASSWORD) . '&softname=RetroHomeAdmin';
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 30, CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_SSL_VERIFYPEER => false, CURLOPT_SSL_VERIFYHOST => 0, CURLOPT_USERAGENT => 'RetroHomeAdmin/1.0']);
+    $img = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $type = (string)curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+    curl_close($ch);
+    if ($img === false || $code !== 200 || stripos($type, 'image/') !== 0) {
+        header('Location: ../public/img/default_cover.png');
+        exit;
+    }
+    header('Content-Type: ' . $type);
+    header('Cache-Control: private, max-age=86400');
+    echo $img;
+    exit;
+}
+
 // --- Handle Search Request (AJAX) ---
 if (isset($_GET['action']) && $_GET['action'] === 'search') {
     $rawTerm = $_GET['term'] ?? '';
@@ -643,7 +683,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'search') {
             $formatted[] = [
                 'id' => $g['id'],
                 'title' => $g['noms'][0]['text'] ?? 'Unknown',
-                'cover' => 'https://api.screenscraper.fr/api2/mediaJeu.php?systemeid=' . $systemId . '&jeuid=' . $g['id'] . '&media=box-2D&region=wor&ssid=' . urlencode(SCREENSCRAPER_USER) . '&sspassword=' . urlencode(SCREENSCRAPER_PASSWORD) . '&devid=' . urlencode(SCREENSCRAPER_DEV_ID) . '&devpassword=' . urlencode(SCREENSCRAPER_DEV_PASSWORD) . '&softname=RetroHomeAdmin',
+                // Aperçu servi par notre proxy : aucun identifiant n'est exposé au navigateur
+                'cover' => 'add_game_auto.php?action=thumb&systemeid=' . (int)$systemId . '&jeuid=' . (int)$g['id'],
                 'description' => $g['synopsis'][0]['text'] ?? 'No description',
                 'year' => $g['dates'][0]['text'] ?? 'N/A'
             ];

@@ -1,84 +1,30 @@
-# NetPlay Server Setup - EmulatorJS
+# NetPlay — guide rapide
 
-## Quick Setup (LAN)
+Le serveur NetPlay est **inclus** dans `netplay-server/` : rien à cloner.
 
-### 1. Installation
+## Démarrer le serveur (PC hôte)
 
-```bash
-# Dans le dossier Retrohome
-cd c:\wamp64\www\Retrohome
+- **Windows** : double-cliquez sur `START_NETPLAY.bat`
+- **Linux / macOS** : `./START_NETPLAY.sh`
+- **Manuel** : `cd netplay-server && npm install && npm start`
 
-# Cloner le serveur NetPlay
-git clone https://github.com/EmulatorJS/EmulatorJS-Netplay.git netplay-server
+Vérification : `http://localhost:3000/health` doit répondre `{"status":"ok","version":3,…}`.
+Ouvrez le port **3000/TCP** dans le pare-feu pour les autres machines du réseau.
 
-# Aller dans le dossier
-cd netplay-server
+## Jouer à deux
 
-# Installer les dépendances
-npm install express socket.io cors
-```
-
-### 2. Démarrer le Serveur
-
-```bash
-# Lancer le serveur
-node server.js
-```
-
-Le serveur démarre sur `http://localhost:3000`
-
-### 3. Utilisation
-
-1. **Joueur 1 (Hôte)** :
-   - Ouvrir un jeu
-   - Le bouton NetPlay apparaît dans EmulatorJS
-   - Cliquer sur NetPlay pour créer une room
-   - Partager le code room
-
-2. **Joueur 2** :
-   - Ouvrir le même jeu (même ROM)
-   - Cliquer sur NetPlay
-   - Entrer le code room
-   - Rejoindre la partie
-
-### 4. (Optionnel) PM2 pour Production
-
-```bash
-# Installer PM2
-npm install -g pm2
-
-# Lancer avec PM2
-pm2 start server.js --name retrohome-netplay
-
-# Voir les logs
-pm2 logs retrohome-netplay
-
-# Auto-start au redémarrage
-pm2 startup
-pm2 save
-```
+1. **Hôte** : ouvrez un jeu → **NETPLAY** → *Create a room* (mot de passe facultatif).
+2. **Ami** (même réseau) : ouvrez le site via l'IP de l'hôte, page **Multiplayer** → **Rejoindre**
+   (ou ouvrez le même jeu → **NETPLAY** → *Join*).
+3. Chacun contrôle son joueur (hôte = joueur 1, ami = joueur 2), en même temps.
 
 ## Dépannage
 
-### Port déjà utilisé
-```bash
-# Windows PowerShell
-$env:PORT=4000; node server.js
-```
+| Symptôme | Solution |
+|----------|----------|
+| « Serveur NetPlay hors-ligne » sur la page Multiplayer | le serveur n'est pas lancé, ou le port 3000 est bloqué par le pare-feu |
+| La room n'apparaît pas chez l'ami | l'ami doit ouvrir **le même jeu** (même titre) et être sur le même réseau |
+| « en attente de l'autre joueur… » | la connexion de l'autre joueur est coupée ou son onglet est en arrière-plan |
+| Anciens fichiers en cache après une mise à jour | Ctrl+F5 sur chaque poste, puis relancez le serveur |
 
-### Connexion impossible
-- Vérifier que le serveur est lancé (`http://localhost:3000`)
-- Vérifier le pare-feu Windows
-- Les deux joueurs doivent être sur le même réseau LAN
-
-## Configuration Client
-
-Le client est déjà configuré dans `script.js` :
-```javascript
-window.EJS_netplayUrl = 'ws://localhost:3000';
-```
-
-Pour jouer sur un autre PC du réseau LAN, remplacer `localhost` par l'IP locale :
-```javascript
-window.EJS_netplayUrl = 'ws://192.168.1.XXX:3000';  // IP du serveur
-```
+Détails techniques : section *NetPlay* du [README](README.md).

@@ -15,6 +15,13 @@ if (!$user || $user['role'] !== 'admin') {
     echo "Accès interdit.";
     exit();
 }
+// Protection CSRF : l'action doit provenir de l'interface d'administration
+if (!rh_csrf_valid($_GET['csrf'] ?? '')) {
+    header('HTTP/1.0 403 Forbidden');
+    echo "Jeton de sécurité invalide ou expiré. Rechargez la page d'administration et réessayez.";
+    exit();
+}
+
 $console_id = $_GET['id'] ?? null;
 if (!$console_id || !is_numeric($console_id)) {
     header('Location: ./');

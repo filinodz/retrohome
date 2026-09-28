@@ -437,8 +437,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($action === 'login' || $action === 'register') {
-    error_log("API Action: $action");
-    error_log("POST Data: " . print_r($postData, true));
 }
 
 

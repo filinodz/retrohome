@@ -26,8 +26,8 @@ function send_sse_message($event_type, $data) {
     @ob_flush();
 }
 
-$token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
-$indices_str = filter_input(INPUT_GET, 'indices', FILTER_SANITIZE_STRING);
+$token = preg_replace('/[^a-f0-9]/i', '', (string)($_GET['token'] ?? ''));
+$indices_str = preg_replace('/[^0-9,]/', '', (string)($_GET['indices'] ?? ''));
 $session_key = 'scan_import_data_' . $token;
 
 if (!$token || !isset($_SESSION[$session_key]) || !$indices_str) {
@@ -289,10 +289,10 @@ for ($i = 0; $i < $total_files; $i++) {
         // 7. Download Media
         $coverPath = '';
         if ($coverUrl) {
-            $coverExt = pathinfo(parse_url($coverUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
-            $coverTarget = $targetDir . 'images/' . $gameSlug . '.' . $coverExt;
-            if (downloadMedia($coverUrl, $coverTarget, true)['success']) {
-                $coverPath = $relativeDir . 'images/' . $gameSlug . '.' . $coverExt;
+            // L'extension est déduite du CONTENU (l'URL ScreenScraper se termine par .php !)
+            $coverTarget = $targetDir . 'images/' . $gameSlug . '.png';
+            if (downloadMedia($coverUrl, $coverTarget, true)['success'] && ($fixedCover = rh_fix_image_file($coverTarget)) !== null) {
+                $coverPath = $relativeDir . 'images/' . basename($fixedCover);
             }
         }
 

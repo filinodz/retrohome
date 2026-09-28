@@ -1,4 +1,6 @@
 <?php
+// Masque les identifiants ScreenScraper dans les URLs écrites au journal
+if (!function_exists('rh_redact')) { function rh_redact($u) { return preg_replace('/((?:dev|ss)(?:id|password)|password)=[^&]*/i', '$1=***', (string)$u); } }
 // Désactiver la mise en mémoire tampon pour la sortie SSE
 if (ob_get_level() > 0) { for ($i = 0; $i < ob_get_level(); $i++) { ob_end_flush(); } }
 ob_implicit_flush(true);
@@ -27,7 +29,7 @@ function send_sse_message($event_type, $data) {
 }
 
 // --- Récupération du token et des données de session ---
-$token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+$token = preg_replace('/[^a-f0-9]/i', '', (string)($_GET['token'] ?? ''));
 $session_key = 'bulk_upload_data_' . $token;
 
 if (!$token || !isset($_SESSION[$session_key])) {
@@ -141,8 +143,11 @@ try {
         $data = json_decode($response, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             // Si le JSON est invalide mais que la requête était OK, logguer la réponse brute
-             error_log("SSE Process - Invalid JSON received from $url. HTTP Code: $http_code. Response: " . substr($response, 0, 500));
-            return ['error' => "Réponse API invalide (JSON mal formé)", 'http_code' => $http_code];
+             error_log("SSE Process - Invalid JSON received from " . rh_redact($url) . ". HTTP Code: $http_code. Response: " . substr($response, 0, 500));
+            if (stripos((string)$response, 'identifiants d') !== false || stripos((string)$response, 'Erreur de login') !== false) {
+                return ['error' => "Identifiants développeur ScreenScraper manquants ou refusés : renseignez-les dans Admin › Réglages.", 'http_code' => 401];
+            }
+            return ['error' => trim((string)$response) === '' ? "ScreenScraper n'a pas répondu (réseau ou service indisponible)." : "Réponse API invalide (JSON mal formé)", 'http_code' => $http_code];
         }
         // Vérifier l'état de connexion SS
         if (isset($data['ssuser']['connect']) && $data['ssuser']['connect'] == 0) {
@@ -231,7 +236,7 @@ function findBestLevenMatch($games, $searchTerm) {
  */
 function downloadMedia($url, $destination_path) {
     if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
-        error_log("DownloadMedia SSE: URL invalide: " . print_r($url, true));
+        error_log("DownloadMedia SSE: URL invalide: " . rh_redact($url));
         return ['success' => false, 'error' => 'URL invalide'];
     }
 
@@ -515,7 +520,10 @@ for ($i = 0; $i < $total_files; $i++) {
                     $rom_ext = strtolower(pathinfo($current_rom_original_name, PATHINFO_EXTENSION));
                     $rom_filename = $gameSlug . '.' . $rom_ext;
                     $rom_destination = $gameDirAbsolute . $rom_filename;
-                    if (!@rename($current_rom_tmp_path, $rom_destination)) { // Tenter rename d'abord
+                    if (!rh_is_allowed_rom_ext($rom_ext)) {
+                        $current_file_errors[] = "Extension de ROM non autorisée : .$rom_ext";
+                        if (file_exists($current_rom_tmp_path)) @unlink($current_rom_tmp_path);
+                    } elseif (!@rename($current_rom_tmp_path, $rom_destination)) { // Tenter rename d'abord
                          if (@copy($current_rom_tmp_path, $rom_destination)) { // Fallback copy
                              @unlink($current_rom_tmp_path); // Supprimer source après copie réussie
                               $rom_path_relative = $gameBaseRelativePath . $rom_filename;
@@ -534,11 +542,15 @@ for ($i = 0; $i < $total_files; $i++) {
                     // Téléchargement Cover (si ROM OK)
                     if (empty($current_file_errors) && !empty($coverUrl)) {
                         send_sse_message('progress', ['index' => ($i + 1), 'total' => $total_files, 'filename' => htmlspecialchars($current_rom_original_name), 'status' => __('admin_dl_cover')]);
-                        $cover_ext = strtolower($coverFormat) ?: 'png';
+                        $cover_ext = in_array(strtolower((string)$coverFormat), RH_IMAGE_EXTENSIONS, true) ? strtolower($coverFormat) : 'png';
                         $cover_filename = $gameSlug . '.' . $cover_ext;
                         $cover_destination = $imagesDir . $cover_filename;
                         $downloadResult = downloadMedia($coverUrl, $cover_destination);
+                        if ($downloadResult['success'] && ($fixedCover = rh_fix_image_file($cover_destination)) === null) {
+                            $downloadResult = ['success' => false, 'error' => 'fichier reçu invalide'];
+                        }
                         if ($downloadResult['success']) {
+                            $cover_filename = basename($fixedCover);
                             $cover_path_relative = $gameBaseRelativePath . 'images/' . $cover_filename;
                             $cover_download_success = true;
                             send_sse_message('log', ['message' => __('admin_cover_downloaded')]);
@@ -550,7 +562,7 @@ for ($i = 0; $i < $total_files; $i++) {
                         send_sse_message('progress', ['index' => ($i + 1), 'total' => $total_files, 'filename' => htmlspecialchars($current_rom_original_name), 'status' => __('admin_dl_preview')]);
                         
                         $mediaVideoUrl = $videoUrl ?: 'https://api.screenscraper.fr/api2/mediaVideoJeu.php?systemeid=' . $systemId . '&jeuid=' . ($ssGameId ?? '') . '&media=video';
-                        $video_ext = strtolower($videoFormat) ?: 'mp4';
+                        $video_ext = in_array(strtolower((string)$videoFormat), RH_VIDEO_EXTENSIONS, true) ? strtolower($videoFormat) : 'mp4';
                         $preview_filename = $gameSlug . '.' . $video_ext;
                         $preview_destination = $previewDir . $preview_filename;
 

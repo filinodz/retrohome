@@ -94,8 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $rom_original_name = $_FILES['rom']['name'];
                 $rom_ext = strtolower(pathinfo($rom_original_name, PATHINFO_EXTENSION));
                 // Accepter les extensions définies dans le formulaire
-                $allowed_rom_ext = ['zip','sfc','smc','fig','bin','gba','gbc','gb','nes','pce','md','mgd','sms','gg','col','ngp','ngc','ws','wsc'];
-                if (!in_array($rom_ext, $allowed_rom_ext)) {
+                if (!rh_is_allowed_rom_ext($rom_ext)) {
                      $errors[] = "Extension de ROM non autorisée: .$rom_ext";
                 } else {
                     $rom_filename = $gameSlug . '.' . $rom_ext;

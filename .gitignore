@@ -12,6 +12,7 @@ sql/retro_new.sql
 # ─── Contenu sous copyright / lourd (à fournir par l'utilisateur) ─
 roms/*
 !roms/.gitkeep
+!roms/.htaccess
 data/bios/*
 !data/bios/.gitkeep
 

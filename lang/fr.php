@@ -455,4 +455,9 @@ return [
     'admin_select_game_desc' => 'Sélectionnez le jeu correspondant',
     'admin_no_issues' => 'Aucun problème détecté',
     'admin_untracked_files_title' => 'Fichiers non répertoriés',
+    'admin_netplay_url' => 'URL du serveur NetPlay',
+    'admin_netplay_url_help' => 'Laisser vide pour utiliser automatiquement http://&lt;adresse du site&gt;:3000 (serveur lancé avec START_NETPLAY.bat ou « npm start » dans netplay-server/).',
+    'admin_ss_devid' => 'ScreenScraper — identifiant développeur',
+    'admin_ss_devpass' => 'ScreenScraper — mot de passe développeur',
+    'admin_ss_dev_help' => 'Requis pour l\'ajout automatique (jaquettes, fiches, vidéos). Demandez un accès API sur screenscraper.fr (forum, rubrique « Demande d\'accès API »), puis saisissez ici l\'identifiant et le mot de passe développeur fournis.',
 ];

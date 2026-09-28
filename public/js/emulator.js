@@ -157,6 +157,7 @@
   function openNativeNetplay() {
     var em = window.EJS_emulator;
     if (em && typeof em.openNetplayMenu === 'function') {
+      if (window.RHNetplay && window.RHNetplay.ensure) window.RHNetplay.ensure(em);
       try { em.openNetplayMenu(); return; } catch (e) {}
     }
     openNetplayHelp(true);
@@ -173,11 +174,13 @@
     var iv = setInterval(function () {
       tries++;
       var em = window.EJS_emulator;
-      if (!(em && em.netplayEnabled && typeof em.openNetplayMenu === 'function')) {
-        if (tries > 80) clearInterval(iv);
+      // attendre que le jeu soit réellement démarré (cœur chargé) avant de rejoindre
+      if (!(em && em.started && em.gameManager && em.netplayEnabled && typeof em.openNetplayMenu === 'function')) {
+        if (tries > 300) clearInterval(iv);
         return;
       }
       clearInterval(iv);
+      if (window.RHNetplay && window.RHNetplay.ensure) window.RHNetplay.ensure(em);
       try { em.openNetplayMenu(); } catch (e) {}
 
       var t2 = 0;
@@ -194,7 +197,9 @@
             if (input && submit) { input.value = nick; submit.click(); }
             return;
           }
-          // 2) pseudo OK -> rejoindre la room ciblée
+          // 2) pseudo OK -> rejoindre la room ciblée (une fois le correctif netplay installé)
+          if (window.RHNetplay && window.RHNetplay.ensure) window.RHNetplay.ensure(e2);
+          if (!e2.netplay.__rhInputPatched) return;
           localStorage.setItem('netplay_nickname', e2.netplay.name || nick);
           if (typeof e2.netplay.joinRoom === 'function') {
             e2.netplay.joinRoom(sessionid, roomName);
@@ -204,7 +209,7 @@
           // on laisse le menu ouvert pour un join manuel
           clearInterval(iv2);
         }
-        if (t2 > 40) clearInterval(iv2);
+        if (t2 > 120) clearInterval(iv2);
       }, 250);
     }, 400);
   }

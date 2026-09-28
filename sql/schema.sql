@@ -14,7 +14,7 @@ CREATE TABLE `collection_games` (
   KEY `game_id` (`game_id`),
   CONSTRAINT `collection_games_ibfk_1` FOREIGN KEY (`collection_id`) REFERENCES `collections` (`id`),
   CONSTRAINT `collection_games_ibfk_2` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `collections` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `collections` (
   UNIQUE KEY `user_id_name` (`user_id`,`name`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `collections_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `consoles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE `consoles` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`),
   KEY `idx_ss_id` (`ss_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `favorites` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE `favorites` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`game_id`),
   KEY `game_id` (`game_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `games` (
   `id` int NOT NULL AUTO_INCREMENT,
   `console_id` int DEFAULT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE `games` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `console_id` (`console_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=306 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `ratings` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE `ratings` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`game_id`),
   KEY `game_id` (`game_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `settings` (
   `id` int NOT NULL AUTO_INCREMENT,
   `setting_key` varchar(100) NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE `settings` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `setting_key` (`setting_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `user_game_stats` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 
@@ -147,8 +147,8 @@ INSERT INTO `settings` (`setting_key`,`setting_value`,`description`) VALUES
 ('site_theme','aurora','Thème actif'),
 ('screenscraper_user','','Nom d''utilisateur ScreenScraper.fr'),
 ('screenscraper_pass','','Mot de passe ScreenScraper.fr'),
-('screenscraper_devid','enVyZGkxNQ==','Dev ID ScreenScraper.fr (base64)'),
-('screenscraper_devpass','eFRKd29PRmpPUUc=','Dev Password ScreenScraper.fr (base64)'),
+('screenscraper_devid','','Dev ID ScreenScraper.fr (base64)'),
+('screenscraper_devpass','','Dev Password ScreenScraper.fr (base64)'),
 ('netplay_url','','URL du serveur NetPlay (vide = http://<host>:3000)')
 ON DUPLICATE KEY UPDATE `setting_value`=VALUES(`setting_value`);
 

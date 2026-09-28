@@ -456,4 +456,9 @@ return [
     'admin_preview_downloaded' => 'Preview downloaded.',
     'admin_search_term_for' => 'Search term for',
     'admin_start_processing_files' => 'Starting processing of',
+    'admin_netplay_url' => 'NetPlay server URL',
+    'admin_netplay_url_help' => 'Leave empty to use http://&lt;site address&gt;:3000 automatically (server started with START_NETPLAY.bat or “npm start” in netplay-server/).',
+    'admin_ss_devid' => 'ScreenScraper — developer ID',
+    'admin_ss_devpass' => 'ScreenScraper — developer password',
+    'admin_ss_dev_help' => 'Required for automatic adding (covers, details, videos). Request API access on screenscraper.fr (forum, “API access request” section), then enter the developer ID and password you receive.',
 ];

@@ -1,17 +1,8 @@
 <?php
-// Security Check: If config.php already exists and works, block installation
-$isInstalled = false;
-$configFile = '../config.php';
-if (file_exists($configFile)) {
-    try {
-        require_once $configFile;
-        if (defined('DB_NAME') && $db) {
-            $isInstalled = true;
-        }
-    } catch (Exception $e) {
-        $isInstalled = false;
-    }
-}
+// Sécurité : si RetroHome est déjà installé, l'assistant est bloqué (voir _guard.php).
+require_once __DIR__ . '/_guard.php';
+$isInstalled = rh_is_installed();
+$configFile = '../config.local.php';
 
 // Language Detection for Installer (standalone)
 $availableLangs = ['fr', 'en', 'ar'];

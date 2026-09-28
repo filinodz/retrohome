@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$noConsolesConfigured) {
                  // Stocker les informations nécessaires pour le script SSE dans la session
                  $_SESSION['bulk_upload_data_' . $upload_batch_id] = [
                      'console_id' => $console_id,
-                     'region' => filter_input(INPUT_POST, 'region', FILTER_SANITIZE_STRING) ?: 'fr',
+                     'region' => (preg_replace('/[^a-z]/', '', strtolower((string)($_POST['region'] ?? ''))) ?: 'fr'),
                      'files' => $uploaded_files_info,
                      'status' => 'pending' // Statut initial
                  ];

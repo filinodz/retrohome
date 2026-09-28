@@ -685,6 +685,7 @@ function startGame(core, romUrl, gameName) {
         e.preventDefault();
         // On ouvre le menu netplay NATIF d'EmulatorJS (fiable, relais serveur).
         if (window.EJS_emulator && typeof window.EJS_emulator.openNetplayMenu === 'function') {
+            if (window.RHNetplay && window.RHNetplay.ensure) window.RHNetplay.ensure(window.EJS_emulator);
             window.EJS_emulator.openNetplayMenu();
         } else {
             alert("Le jeu n'est pas encore complètement chargé. Réessayez dans un instant.");

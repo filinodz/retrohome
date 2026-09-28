@@ -1,7 +1,17 @@
 {
+  "name": "retrohome-netplay-server",
+  "version": "3.0.0",
+  "description": "Serveur NetPlay (relais LAN) pour RetroHome — protocole netplay d'EmulatorJS.",
+  "main": "server.js",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.2.1",
     "socket.io": "^4.8.1"
   }
 }
